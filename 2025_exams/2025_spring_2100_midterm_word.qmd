@@ -1,0 +1,186 @@
+---
+title: "2025 Spring BIO 2100 Midterm"
+subtitle: "33 points"
+bibliography: ref_exam_fall_2024.bib
+format:
+  docx:
+    toc: true
+    number-sections: true
+    highlight-style: github
+editor:
+  visual:
+    wrap: 72
+  source:
+    wrap: 72
+---
+
+## Instructions! Read this first.
+
+The exam is open note, open course website, open class-related code
+repositories (mine and those you produced in class). However, you may
+not get external help ( from other students, directed internet searches,
+etc.). Please update the statement below to acknowledge these
+instructions (and that you can use git).
+
+I, INSERT YOUR NAME HERE, promise to not seek external help on the exam.
+I understand any academic issues will result in a D or F on the exam or
+in the class and be reported to the Dean of Students. Infractions will
+also result in me being unable to obtain a letter of recommendation from
+the department for professional school applications.
+
+The exam should be committed and pushed to github by Friday, 3/28/2025,
+at 1:15 PM. You can also commit and push along the way, but please mark
+your final commit (when you are finished) with the comment **Finished -
+ready to grade!.**
+
+For all questions, the statement is based on what you might hear from a
+colleague (e.g., "How do I analyze this?"). This is like when you get a
+call to review a paper. Please answer questions succinctly but with
+necessary details on all required steps/concerns you might need to
+consider.
+
+While the exam is based on a realistic scenario (with citations), some
+data and scenarios are fictional and contrived for the exam (i.e., don't
+quote all this as fact!).
+
+Good luck!
+
+## Background
+
+Joro spiders (*Trichonephila clavata*) are coming to New York!
+
+[![Image from Nelsen et al
+2023](joro_spider_from_nelsen_2023.jpg)](https://onlinelibrary.wiley.com/doi/abs/10.1002/ece3.10728)
+
+Originally from Asia, this spider was first observed in Georgia, USA,
+circa 2010. Recent modeling studies have suggested the species could
+thrive in New York [@nelsen2023].
+
+[![Species distribution model (SDM) predictions of Trichonephila
+clavata's suitable range in North America based on its native Asian
+distribution: (a) General Linear Model, (b) General Additive Model, (c)
+Maxent, (d) Random Forest, and (e) Averaged prediction of all four
+models, calculated as an equally weighted average across all four
+primary models, including T. clavata's introduced range as of December
+2022. From Nelsen et al.
+2023.](ece310728-fig-0005-m.jpg)](https://onlinelibrary.wiley.com/doi/full/10.1002/ece3.10728)
+
+Given the pending (or already happened?) invasion, ecologists are
+studying the Joro spider more and more.
+
+## 1
+
+One explanation for the species rapid spread is the specific population
+that arrived in the United States differs from other populations of Joro
+spiders. For example, they may differ in their use of *ballooning*.
+Ballooning occurs when spiders deploy silk threads to catch air currents
+and disperse. In Joro spider populations in Japan, 18% of the hatchlings
+disperse via ballooning. An inital study of Joro spider hatchlings in
+Georgia indicated 22 out of 85 used ballooning. Does this suggest any
+difference in the use of ballooning by Joro spiders in Georgia?
+
+Analyze the data. Make sure you include
+
+-   null hypothesis (1 point)
+
+-   alternative hypothesis (1 point)
+
+-   explanation for test you will use (1.5 point)
+
+-   results from statistical test (1 point)
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+
+## 2
+
+While presenting their work at a conference, another scientist shared
+they had done a similar but larger study. They found that 110 out of 425
+hatchlings from Georgia used ballooning. What does their data indicate
+(you can use the same assumption of 18%)?
+
+Analyze the data. Make sure you include
+
+-   null hypothesis (1 point)
+
+-   alternative hypothesis (1 point)
+
+-   explanation for test you will use (1.5 point)
+
+-   results from statistical test (1 point)
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+
+## 3
+
+A new student is confused when comparing these studies. Both have the
+same signal for ballooning.
+
+### a
+
+What is the signal for ballooning rate in both datasets? (2 pts)
+
+PUT YOUR ANSWER HERE
+
+### b
+
+However, they differ in p-value. Why? In answering this make sure you
+can explain what a p-value is. (2 pts)
+
+PUT YOUR ANSWER HERE
+
+## 4
+
+The larger study also recorded hatchling sex (recorded as male or
+female). Data is shown below
+
+|                         | ***Sex*** |        |
+|-------------------------|-----------|--------|
+| ***Use of ballooning*** | Male      | Female |
+| Ballooned               | 54        | 56     |
+| Did not balloon         | 150       | 165    |
+
+: Spider hatchling gender and ballooning
+
+How would you analyze the data to determine if sex impacts ballooning?
+Make sure you include
+
+-   null hypothesis (1 point)
+
+-   alternative hypothesis (1 point)
+
+-   explanation for test you will use (1.5 point)
+
+-   results from statistical test (1 point)
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+
+## 5
+
+Another, related hypothesis is that the invasive spiders have smaller
+hatchlings. Weight data was collected from a population in Georgia and
+two populations in Asia (Japan and Korea). It can be loaded using the
+code below. Weight is in mg.
+
+```{r}
+spider_mass <- read.csv("spider_mass.csv", stringsAsFactors = T)
+```
+
+How would you analyze the data. Make sure you include
+
+-   null hypothesis (1 point)
+
+-   alternative hypothesis (1 point)
+
+-   explanation for test you will use (1.5 point)
+
+-   results from statistical test (1 point)
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+
+## 6
+
+Plot the data from question 5. (5 pts)
