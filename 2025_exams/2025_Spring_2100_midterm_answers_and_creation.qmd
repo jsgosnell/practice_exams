@@ -185,19 +185,25 @@ Make sure you include
     * *ballooning is not continget on sex*
 
 -   alternative hypothesis (1 point)
-    * *ballooning is  continget on sex*
+    * *ballooning is continget on sex*
 
 
 -   explanation for test you will use (1.5 point)
+    * *I will use a $\chi^2$ test because I am comparing proportions among groups
+    (table style data)*
 
 -   results from statistical test (1 point)
-
--   clear explanation of how results relate to your stated hypotheses
-    (1.5 point)
 
 ```{r}
 chisq.test(matrix(c(54, 56, 150,165), nrow = 2, byrow = T))
 ```
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+
+    * *Since the p value is greater than 0.05, we fail to reject the null
+    hypothesis*
+
 
 ## 5
 
@@ -221,37 +227,49 @@ How would you analyze the data. Make sure you include
 
 -   null hypothesis (1 point)
 
+     * *the means of the three populations are equal*
+
 -   alternative hypothesis (1 point)
 
+    * *the means of the three populations are not equal*
+
 -   explanation for test you will use (1.5 point)
+    * *Given we are comparing means among 3 groups, I will use an ANOVA*
 
 -   results from statistical test (1 point)
 
--   clear explanation of how results relate to your stated hypotheses
-    (1.5 point)
+    * *First I build the model and test assumptions*
 
 ```{r}
 spider_mass_model <- lm(mass_mg~population, spider_mass)
 plot(spider_mass_model)
-
 ```
+
+    * *Since assumptions are met, I consider the results*
 
 ```{r}
 library(car)
 Anova(spider_mass_model, type="III")
 ```
 
+    * *which indicated population (F~2,86~=16.87, p<.01) has an impact on ballooing rates. Given this, I used post hoc tests to determine which means
+    differed from others; I used the Tukey method to compare all pairs while controlling for the family-wise error rate.*
+    
 ```{r}
 library(multcomp)
 spider_mass_compare <- glht(spider_mass_model,  linfct = mcp(population = "Tukey"))
 summary(spider_mass_compare)
 ```
 
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+
+    * *the overall p-value ((F~2,86~=16.87, p<.01) led me to reject the null hypothesis. Post hoc analysis indicated all groups differed from each other (all p <.05).*
 ## 6
 
 Plot the data from question 5.
 
-Several options here
+*Several options here*
 
 ```{r}
 library(Rmisc)
