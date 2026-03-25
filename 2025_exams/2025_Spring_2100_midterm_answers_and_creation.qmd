@@ -51,7 +51,7 @@ Good luck!
 Joro spiders (*Trichonephila clavata*) are coming to New York!
 
 [![Image from Nelsen et al
-2023](images/joro_spider_from_nelsen_2023.jpg)](https://onlinelibrary.wiley.com/doi/abs/10.1002/ece3.10728)
+2023](joro_spider_from_nelsen_2023.jpg)](https://onlinelibrary.wiley.com/doi/abs/10.1002/ece3.10728)
 
 Originally from Asia, this spider was first observed in Georgia, USA,
 circa 2010. Recent modeling studies have suggested the species could
@@ -64,7 +64,7 @@ Maxent, (d) Random Forest, and (e) Averaged prediction of all four
 models, calculated as an equally weighted average across all four
 primary models, including T. clavata's introduced range as of December
 2022. From Nelsen et al.
-2023.](images/ece310728-fig-0005-m.jpg)](https://onlinelibrary.wiley.com/doi/full/10.1002/ece3.10728)
+2023.](ece310728-fig-0005-m.jpg)](https://onlinelibrary.wiley.com/doi/full/10.1002/ece3.10728)
 
 Given the pending (or already happened?) invasion, ecologists are
 studying the Joro spider more and more.
@@ -84,20 +84,29 @@ Analyze the data. Make sure you include
 
 -   null hypothesis (1 point)
 
+    -   *the proportion of spiders balloowing is equal to .18\*
+
 -   alternative hypothesis (1 point)
+
+    -   *the proportion of spiders balloowing is not equal to .18\*
 
 -   explanation for test you will use (1.5 point)
 
--   results from statistical test (1 point)
+    * *Since we have 2 outcomes and are comparing to a set proportion, I will
+use a binomial test.*
 
--   clear explanation of how results relate to your stated hypotheses
-    (1.5 point)
+-   results from statistical test (1 point)
 
 ```{r}
  binom.test(22,85,.18)
 ```
 
-## 2 
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+
+    * *Given a p-value of .06, I fail to reject the null hypothesis.*
+
+## 2
 
 While presenting their work at a conference, another scientist shared
 they had done a similar but larger study. They found that 110 out of 425
@@ -108,18 +117,27 @@ Analyze the data. Make sure you include
 
 -   null hypothesis (1 point)
 
+    -   *the proportion of spiders balloowing is equal to .18\*
+
 -   alternative hypothesis (1 point)
+
+    -   *the proportion of spiders balloowing is not equal to .18\*
 
 -   explanation for test you will use (1.5 point)
 
--   results from statistical test (1 point)
+    * *Since we have 2 outcomes and are comparing to a set proportion, I will
+use a binomial test.*
 
--   clear explanation of how results relate to your stated hypotheses
-    (1.5 point)
+-   results from statistical test (1 point)
 
 ```{r}
  binom.test(110, 425, .18)
 ```
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+
+    * *Given a p-value of 0.0005, I reject the null hypothesis.*
 
 ## 3
 
@@ -130,14 +148,22 @@ same signal for ballooning.
 
 What is the signal for ballooning rate in both datasets?
 
-PUT YOUR ANSWER HERE
+```{r}
+110/425
+22/85
+```
+
+*Both samples shows a signal (proportion ballooning) of .258 \#*
 
 ### b
 
 However, they differ in p-value. Why? In answering this make sure you
 can explain what a p-value is.
 
-PUT YOUR ANSWER HERE
+*The samples differ in associated p-values due to sample size. P-value is
+the probability of getting the signal you observed or something more
+extreme if the null hypothesis is true and you sampled the population
+multiple times.*
 
 ## 4
 
@@ -156,8 +182,11 @@ How would you analyze the data to determine if sex impacts ballooning?
 Make sure you include
 
 -   null hypothesis (1 point)
+    * *ballooning is not continget on sex*
 
 -   alternative hypothesis (1 point)
+    * *ballooning is  continget on sex*
+
 
 -   explanation for test you will use (1.5 point)
 
@@ -222,7 +251,6 @@ summary(spider_mass_compare)
 
 Plot the data from question 5.
 
-
 Several options here
 
 ```{r}
@@ -242,7 +270,6 @@ ggplot(spider_summary, aes(x=population, y=mass_mg)) +
           plot.title = element_text(hjust=0.5, face="bold", size=32))
 ```
 
-
 ```{r}
 ggplot(spider_mass, aes(y=mass_mg, x=population, color=population)) +
   geom_jitter() +
@@ -251,6 +278,3 @@ ggplot(spider_mass, aes(y=mass_mg, x=population, color=population)) +
        x= "population")+
   guides(color=F)
 ```
-
-
-
