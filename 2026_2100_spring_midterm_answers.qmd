@@ -1,0 +1,263 @@
+---
+title: "2026 Spring BIO 2100 Midterm"
+subtitle: "33 points"
+bibliography: ref_2026_2100_spring_midterm.bib
+format:
+  html:
+    embed-resources: true
+    toc: true
+    toc-float: true
+    toc-depth: 6
+    code-fold: false
+editor:
+  visual:
+    wrap: 72
+  source:
+    wrap: 72
+---
+
+## Instructions! Read this first.
+
+The exam is open note, open course website, open class-related code
+repositories (mine and those you produced in class). However, you may
+not get external help ( from other students, AI, directed internet
+searches, etc.). Please update the statement below to acknowledge these
+instructions (and that you can use git).
+
+I, INSERT YOUR NAME HERE, promise to not seek external help on the exam.
+I understand any academic issues will result in a D or F on the exam or
+in the class and be reported to the Dean of Students. Infractions will
+also result in me being unable to obtain a letter of recommendation from
+the department for professional school applications.
+
+The exam should be committed and pushed to github by Monday, 3/28/2026,
+at 9:55 AM. You can also commit and push along the way, but please mark
+your final commit (when you are finished) with the comment **Finished -
+ready to grade!.**
+
+For all questions, the statement is based on what you might hear from a
+colleague (e.g., "How do I analyze this?"). This is like when you get a
+call to review a paper. Please answer questions succinctly but with
+necessary details on all required steps/concerns you might need to
+consider.
+
+While the exam is based on a realistic scenario (with citations), some
+data and scenarios are fictional and contrived for the exam (i.e., don't
+quote all this as fact!).
+
+Good luck!
+
+## Background
+
+Where do bees go in the winter? And how do they survive?
+
+[![Bombus impatiens, the common eastern bumblebee. Photographed in New
+Jersey. By Mousebelt - Own work, CC BY-SA 4.0,
+https://commons.wikimedia.org/w/index.php?curid=98700493](BumbleBee.jpg){fig-alt="Picture of bee (Bombus impatiens) on flower"}](https://commons.wikimedia.org/w/index.php?curid=98700493)
+
+New common eastern bumblee (*Bombus impatiens*) queens (gynes) nest
+underground after mating in the fall. They start new colonies the
+following spring. Given that, how do they survive rain and snow during
+their hibernation, which may last for months?
+
+A lab accident led to the discovery that bees may be able to survive
+submersion [@hibernat].
+
+## 1
+
+During an experiment focused on the impact of insecticides on common
+eastern bumblebees, a graduate student was keeping bee queens in
+soil-filled tubes in the refrigerator (to mimic winter conditions). One
+day she noticed some of the tubes were filled with water. She quickly
+removed the bees but expected them to be dead. Instead, 20 out of 21
+were still moving.
+
+This may be an example of where statistics is not needed. Why?
+
+## 2
+
+An editor suggested a short comment noting these results should have a
+p-value (probably a bad idea..). However, how would you use statistics
+to analyze the data. Make sure you include
+
+-   null hypothesis (1 point)
+
+-   alternative hypothesis (1 point)
+
+-   explanation for test you will use (1.5 point)
+
+-   results from statistical test (1 point)
+
+    ```{r}
+    binom.test(20,21,0)
+    ```
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+
+## 3
+
+A fellow student is confused about your analysis. They focused on
+mortality (opposite of survival) and found a signal of `r 1/21`
+<!--new trick! render this (or look at the html) and note it gives you the answer! this is an in-line code chunk  -->
+in the data and took that as p. Why is your value different? Make sure
+you explain what a p-value is!
+
+## 4
+
+Note during creation: understand the data
+
+```{r}
+bee_data <- read.csv("data_flooding.csv", stringsAsFactors = T)
+```
+
+```{r}
+summary(bee_data)
+unique(bee_data$Bee_ID)
+```
+
+143 unique bees
+
+```{r}
+library(Rmisc)
+summarySE(bee_data, groupvars = c("Bee_ID"), measurevar = "Weight")
+```
+
+each bee assessed three times
+
+```{r}
+summarySE(bee_data, groupvars = c("Tx"), measurevar = "Weight")
+```
+
+17 control, 21 in each duration x submersion treatment
+
+```{r}
+summarySE(bee_data, groupvars = c("Tx", "Duration", "Time"), measurevar = "Weight")
+
+```
+
+A follow-up study submersion [@rondeau2024] experiment compared survival
+under three different conditions.
+
+-   **control** (no water)
+
+-   **floating** in water
+
+-   maintained **underwater** via a plunger
+
+![Three treatments used in the study. From Rondeau and Raine
+2026.](rsbl.2023.0609.f001.png){fig-alt="Three test tubes are shown. A bee is in each, and each has dirt on the bottom. One bee is on the dirt (control), one is floating in water that has been added to the tube, and one is submerged in water by a plunger that has been used to cap the tube."}
+
+Bees were initially placed in soil filled tubes and refrigerated. After
+7 days, submersion treatments were applied. For the treatments with
+water, bees were maintained for 8 hours, 24 hours, or 7 days. A total of
+143 bees (17 control, 21 in each duration x treatment condition) were
+used. After the experiment, all bees were returned to new tubes with
+soil, returned to the refrigerator, then assessed for survival at one,
+four, and eight weeks following the beginning of submersion treatments.
+
+For our exam, we will focus on the data collected at eight weeks
+following 24 hour submersion treatments. Below code creates a table if
+you wish to use the combined data. Note the following columns are used
+
+-   Submersion
+
+    -   treatment (control; floating, underwater =submerged)
+
+-   Weight
+
+    -   weight in mg (measured before the study)
+
+-   Survival
+
+    -   1= survived; 0 = did not survive
+
+```{r}
+bee_data <- read.csv("data_flooding.csv", stringsAsFactors = T)
+library(plyr)
+bee_data$Submersion <-revalue(bee_data$Submersion, c("ctl"="control")) 
+bee_data <- bee_data[bee_data$Time==8 & bee_data$Duration==24 & bee_data$Weight != "NA"|
+                       bee_data$Time==8 & bee_data$Submersion=="control" & bee_data$Weight != "NA",]
+bee_table <- table(bee_data[bee_data$Time==8 & bee_data$Duration==24|
+                       bee_data$Time==8 & bee_data$Submersion=="control","Submersion"],
+      bee_data[bee_data$Time==8 & bee_data$Duration==24|
+                       bee_data$Time==8 & bee_data$Submersion=="control","Survival"])
+colnames(bee_table) <- c("Survived", "Did not survive")
+bee_table
+```
+
+Analyze the data. Make sure you include
+
+-   null hypothesis (1 point)
+
+-   alternative hypothesis (1 point)
+
+-   explanation for test you will use (1.5 point)
+
+-   results from statistical test (1 point)
+
+    ```{r}
+    chisq.test(bee_table)
+    ```
+
+    ```{r}
+    chisq.test(bee_table)$expected
+    ```
+
+    ```{r}
+    fisher.test(bee_table)
+    ```
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+
+## 5
+
+Data was also collected on the weights of the bees (*Weight* column in
+**bee_data**). Plot the weight data to consider differences among
+submersion treatments.
+
+```{r}
+library(Rmisc)
+library(ggplot2)
+bee_summary <- summarySE(bee_data, measurevar="Weight", groupvars="Submersion")
+ggplot(bee_summary, aes(x=Submersion, y=Weight)) +
+    geom_point(size=3) +
+    geom_errorbar(aes(ymin=Weight - ci, ymax=Weight + ci), width=0) +
+    ylab("Mass (mg)") +
+    xlab("Treatment") +
+    ggtitle("Mass by submersion treatment")
+```
+
+```{r}
+ggplot(bee_data, aes(y=Weight, x=Submersion, color=Submersion)) +
+  geom_jitter() +
+  labs(title="Masses of bees used in various treaments",
+       subtitle = "There is no apparent difference in weights",
+       y= "Bee weight (mg)",
+       x= "Treatment")+
+  guides(color=F)
+```
+
+## 6
+
+Another lab group wants to use this data to consider if bees used in the
+study differed from typical queen weights. A typical queen at the stage
+used in the study weighs 450 mg.
+
+Investigate the question. Make sure you include
+
+-   null hypothesis (1 point)
+
+-   alternative hypothesis (1 point)
+
+-   explanation for test you will use (1.5 point)
+
+-   results from statistical test (1 point)
+
+    ```{r}
+    t.test(bee_data$Weight, mu=450)
+    ```
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)

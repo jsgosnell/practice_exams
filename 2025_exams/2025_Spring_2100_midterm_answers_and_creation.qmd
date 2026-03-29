@@ -84,16 +84,16 @@ Analyze the data. Make sure you include
 
 -   null hypothesis (1 point)
 
-    -   *the proportion of spiders balloowing is equal to .18\*
+    -   \*the proportion of spiders balloowing is equal to .18\*
 
 -   alternative hypothesis (1 point)
 
-    -   *the proportion of spiders balloowing is not equal to .18\*
+    -   \*the proportion of spiders balloowing is not equal to .18\*
 
 -   explanation for test you will use (1.5 point)
 
-    * *Since we have 2 outcomes and are comparing to a set proportion, I will
-use a binomial test.*
+    -   *Since we have 2 outcomes and are comparing to a set proportion,
+        I will use a binomial test.*
 
 -   results from statistical test (1 point)
 
@@ -104,7 +104,7 @@ use a binomial test.*
 -   clear explanation of how results relate to your stated hypotheses
     (1.5 point)
 
-    * *Given a p-value of .06, I fail to reject the null hypothesis.*
+    -   *Given a p-value of .06, I fail to reject the null hypothesis.*
 
 ## 2
 
@@ -117,16 +117,16 @@ Analyze the data. Make sure you include
 
 -   null hypothesis (1 point)
 
-    -   *the proportion of spiders balloowing is equal to .18\*
+    -   \*the proportion of spiders balloowing is equal to .18\*
 
 -   alternative hypothesis (1 point)
 
-    -   *the proportion of spiders balloowing is not equal to .18\*
+    -   \*the proportion of spiders balloowing is not equal to .18\*
 
 -   explanation for test you will use (1.5 point)
 
-    * *Since we have 2 outcomes and are comparing to a set proportion, I will
-use a binomial test.*
+    -   *Since we have 2 outcomes and are comparing to a set proportion,
+        I will use a binomial test.*
 
 -   results from statistical test (1 point)
 
@@ -137,7 +137,7 @@ use a binomial test.*
 -   clear explanation of how results relate to your stated hypotheses
     (1.5 point)
 
-    * *Given a p-value of 0.0005, I reject the null hypothesis.*
+    -   *Given a p-value of 0.0005, I reject the null hypothesis.*
 
 ## 3
 
@@ -160,8 +160,8 @@ What is the signal for ballooning rate in both datasets?
 However, they differ in p-value. Why? In answering this make sure you
 can explain what a p-value is.
 
-*The samples differ in associated p-values due to sample size. P-value is
-the probability of getting the signal you observed or something more
+*The samples differ in associated p-values due to sample size. P-value
+is the probability of getting the signal you observed or something more
 extreme if the null hypothesis is true and you sampled the population
 multiple times.*
 
@@ -182,16 +182,12 @@ How would you analyze the data to determine if sex impacts ballooning?
 Make sure you include
 
 -   null hypothesis (1 point)
-    * *ballooning is not continget on sex*
-
+    -   *ballooning is not continget on sex*
 -   alternative hypothesis (1 point)
-    * *ballooning is continget on sex*
-
-
+    -   *ballooning is continget on sex*
 -   explanation for test you will use (1.5 point)
-    * *I will use a $\chi^2$ test because I am comparing proportions among groups
-    (table style data)*
-
+    -   *I will use a* $\chi^2$ test because I am comparing proportions
+        among groups (table style data)
 -   results from statistical test (1 point)
 
 ```{r}
@@ -201,9 +197,8 @@ chisq.test(matrix(c(54, 56, 150,165), nrow = 2, byrow = T))
 -   clear explanation of how results relate to your stated hypotheses
     (1.5 point)
 
-    * *Since the p value is greater than 0.05, we fail to reject the null
-    hypothesis*
-
+    -   *Since the p value is greater than 0.05, we fail to reject the
+        null hypothesis*
 
 ## 5
 
@@ -227,34 +222,40 @@ How would you analyze the data. Make sure you include
 
 -   null hypothesis (1 point)
 
-     * *the means of the three populations are equal*
+    -   *the means of the three populations are equal*
 
 -   alternative hypothesis (1 point)
 
-    * *the means of the three populations are not equal*
+    -   *the means of the three populations are not equal*
 
 -   explanation for test you will use (1.5 point)
-    * *Given we are comparing means among 3 groups, I will use an ANOVA*
+
+    -   *Given we are comparing means among 3 groups, I will use an
+        ANOVA*
 
 -   results from statistical test (1 point)
 
-    * *First I build the model and test assumptions*
+    -   *First I build the model and test assumptions*
 
 ```{r}
 spider_mass_model <- lm(mass_mg~population, spider_mass)
 plot(spider_mass_model)
 ```
 
-    * *Since assumptions are met, I consider the results*
+```         
+* *Since assumptions are met, I consider the results*
+```
 
 ```{r}
 library(car)
 Anova(spider_mass_model, type="III")
 ```
 
-    * *which indicated population (F~2,86~=16.87, p<.01) has an impact on ballooing rates. Given this, I used post hoc tests to determine which means
-    differed from others; I used the Tukey method to compare all pairs while controlling for the family-wise error rate.*
-    
+```         
+* *which indicated population (F~2,86~=16.87, p<.01) has an impact on ballooing rates. Given this, I used post hoc tests to determine which means
+differed from others; I used the Tukey method to compare all pairs while controlling for the family-wise error rate.*
+```
+
 ```{r}
 library(multcomp)
 spider_mass_compare <- glht(spider_mass_model,  linfct = mcp(population = "Tukey"))
@@ -264,8 +265,9 @@ summary(spider_mass_compare)
 -   clear explanation of how results relate to your stated hypotheses
     (1.5 point)
 
-    * *the overall p-value ((F~2,86~=16.87, p<.01) led me to reject the null hypothesis. Post hoc analysis indicated all groups differed from each other (all p <.05).*
-## 6
+    -   *the overall p-value ((F~2,86~=16.87, p\<.01) led me to reject
+        the null hypothesis. Post hoc analysis indicated all groups
+        differed from each other (all p \<.05).* \## 6
 
 Plot the data from question 5.
 
