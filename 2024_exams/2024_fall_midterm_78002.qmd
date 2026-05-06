@@ -1,0 +1,147 @@
+---
+title: "2024 Fall 78002 Midterm"
+bibliography: references.bib
+format:
+  html:
+    embed-resources: true
+    toc: true
+    toc-float: true
+    toc-depth: 6
+    code-fold: false
+---
+
+## Instructions! Read this first.
+
+The exam is open note, open course website, open class-related code
+repositories (mine and those you produced in class). However, you may
+not get external help ( from other students, directed internet searches,
+etc.). Please update the statement below to acknowledge these
+instructions (and that you can use git).
+
+I, INSERT YOUR NAME HERE, promise to not seek external help on the exam.
+I understand any academic issues will result in a D or F on the exam or
+in the class and be reported to the Dean of Students. Infractions will
+also result in me being unable to obtain a letter of recommendation from
+the department for professional school applications.
+
+Good luck!
+
+## Background
+
+A recent paper [@piotto2024] found that micropredation (when animals eat
+only a portion of a target prey) by gulls may be important to survival
+in southern right whale (*Eubalaena australis*) calves in Argentina.
+These predation events cause lesions to develop on whales that may
+increase susceptibilty to infection; attempts to prevent them may reduce
+maternal energy stores and time spent feeding and resting.
+
+A new graduate student in your program is interested in this topic and
+how it may be mediated by food availability, especially in urban
+systems. In 2023 over a quarter of the world's North Atlantic right
+whale population was observed off Long Island [@riley2024], and while
+kelp gulls *Larus dominicanus* are not found in New York, a sister
+species (great black-backed gull (*Larus marinus*)) is. Great
+black-backed gulls are known to be extremely aggressive predators. They
+are also known to forage at dumps [@cavanaugh].
+
+## 1
+
+The student collected data on whales off the coast of Long Island using
+photos.  The photos showed birds were present in the area and included a few
+direct acts of attack. Images of whales showed that 36 out of 117 of
+whales have lesions! In general, whales have
+lesions 28% of the time for a variety of reasons. 
+
+Analyze the data. Make sure you include
+
+-   null hypothesis (1 point)
+
+-   alternative hypothesis (1 point)
+
+-   explanation for test you will use (1.5 point)
+
+-   results from statistical test (1 point)
+
+-   clear explanation of how results relate to your stated hypotheses (1.5 point)
+
+## 2
+
+In a follow-up study, your friend gets information on gull attacks on
+whales in areas with low (near dumps, which attract birds to land),
+medium (in open waters), and high (near fishing vessel routes) gull
+density (n=200 per activity type). They then monitor the stress of
+whales in these areas (through measurements of glucocorticoid levels
+(GC, ng/g^-1^)) obtained by collecting whale feces, following work by @lemos2020)
+to see if the whales showed any differences in anxiety in these areas.
+The data are provided below.
+
+
+```{r}
+whale_stress <- readRDS("whale_stress_lab.RDS")
+```
+
+Analyze the data. Make sure you include
+
+-   null hypothesis (1 point)
+
+-   alternative hypothesis (1 point)
+
+-   explanation for test you will use (1.5 point)
+
+-   results from statistical test (1 point)
+
+-   clear explanation of how results relate to your stated hypotheses (1.5 point)
+
+## 3
+
+Provide (the images) 2 options for plotting the data (don't worry about units if 
+not provided).
+Briefly discuss the pros and cons of each. (6 pts)
+
+# 4
+
+Another measure of stress, TSH levels, was gathered from the population with
+high gull activity.  You can access it using:
+
+```{r}
+whale_tsh <- readRDS("whale_tsh.RDS")
+```
+
+TSH levels should be low (10 ng/g^-1^).  Analyze the data. Make sure you include
+
+-   null hypothesis (1 point)
+
+-   alternative hypothesis (1 point)
+
+-   explanation for test you will use (1.5 point)
+
+-   results from statistical test (1 point)
+
+-   clear explanation of how results relate to your stated hypotheses (1.5 point)
+
+
+## 5
+
+Another study uses low and high activity levels and compares calf
+survival in these areas.
+
+|                 |                     |                      |
+|-----------------|---------------------|----------------------|
+|                 | *Low gull activity* | *High gull activity* |
+| *Calf survived* | 31                  | 21                   |
+| *Calf died*     | 2                   | 8                    |
+
+
+Analyze the data. Make sure you include
+
+-   null hypothesis (1 point)
+
+-   alternative hypothesis (1 point)
+
+-   explanation for test you will use (1.5 point)
+
+-   results from statistical test (1 point)
+
+-   clear explanation of how results relate to your stated hypotheses (1.5 point)
+
+

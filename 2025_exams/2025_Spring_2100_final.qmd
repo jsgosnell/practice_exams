@@ -1,5 +1,5 @@
 ---
-title: "2025 Spring BIO 2100 Final Creation and Answers"
+title: "2025 Spring BIO 2100 Final"
 bibliography: ref_exam_spring_2025.bib
 format:
   html:
@@ -36,9 +36,8 @@ ready to grade!.**
 
 For all questions, the statement is based on what you might hear from a
 colleague or client if you were a statistical consultant (e.g., "How do
-I analyze this?"). This is like when you get a call to review a paper.
-Please answer questions succinctly but with necessary details on all
-required steps/concerns you might need to consider.
+I analyze this?"). Please answer questions succinctly but with necessary
+details on all required steps/concerns you might need to consider.
 
 While the exam is based on a realistic scenario (with citations), some
 data and scenarios are fictional and contrived for the exam (i.e., don't
@@ -49,7 +48,7 @@ Good luck!
 ## Background
 
 Earlier this year a company announced they had "resurrected" dire wolves
-by gene editing gray wolf embryos\@newsat2025.
+by gene editing gray wolf embryos [@newsat2025].
 
 [![Screenshot from Science News announcing dire wolf resurrection
 (4/11/2025)](Screenshot%202025-05-13%20152253.png)](https://www.science.org/doi/pdf/10.1126/science.ady0869)
@@ -66,17 +65,11 @@ wolf weighs 31 kg. Data below on 26 adult dire wolves the company has
 produced is available using
 
 ```{r}
-set.seed(29)
-male_dire_weight <- data.frame(mass_kg = c(round(rnorm(26, 38, 4),2)))
-write.csv(male_dire_weight, "male_dire_weight.csv", row.names = F)
-rm(male_dire_weight)
-```
-
-```{r}
 male_dire_weight <- read.csv("male_dire_weight.csv", stringsAsFactors = T)
 ```
 
-Analyze the data. Make sure you include
+Analyze the data to compare weights of dire and gray wolves. Make sure
+you include
 
 -   null hypothesis (1 point)
 
@@ -89,22 +82,11 @@ Analyze the data. Make sure you include
 -   clear explanation of how results relate to your stated hypotheses
     (1.5 point)
 
-```{r}
-t.test(male_dire_weight$mass_kg, mu=31)
-```
-
 ## 2
 
 A few years later, the company has produced three "lines" of dire wolves
 using different gene editing techniques. Is there any evidence the three
-lines differ in mean weight? Data is available using
-
-```{r}
-set.seed(29)
-male_dire_weight_groups <- data.frame(line = c(rep("a", 26), rep("b", 24), rep("c", 27)), mass_kg = c(round(rnorm(77, 38, 4),2)))
-write.csv(male_dire_weight_groups, "male_dire_weight_groups.csv", row.names = F)
-rm(male_dire_weight_groups)
-```
+lines differ in weight? Data is available using
 
 ```{r}
 male_dire_weight_groups <- read.csv("male_dire_weight_groups.csv", stringsAsFactors = T)
@@ -123,33 +105,13 @@ Analyze the data. Make sure you include
 -   clear explanation of how results relate to your stated hypotheses
     (1.5 point)
 
-```{r}
-group_lm <- lm(mass_kg~line, male_dire_weight_groups)
-plot(group_lm)
-```
-
-```{r}
-library(car)
-Anova(group_lm, type="III")
-```
-
 ## 3
 
 Dire wolves are also supposed to have smaller snouts relative to their
 body length than regular wolves. The company provided data from 25 of
 their dire wolves and 26 of the gray wolves that were used to source
 embryos. Is there evidence the dire wolves are different than gray
-wolves? Data is available using
-
-```{r}
-set.seed(19)
-snout_body_data <- data.frame(wolf = c(rep("gray", 26), rep("dire", 25)), body_length_cm = c(rep(rnorm(51, 60*2.54, 6))))
-snout_body_data$snout_length_cm <- NA
-snout_body_data[snout_body_data$wolf=="gray", "snout_length_cm"] <- snout_body_data[snout_body_data$wolf=="gray", "body_length_cm"]*(.2+runif(26,0,1)*.01)
-snout_body_data[snout_body_data$wolf=="dire", "snout_length_cm"] <- snout_body_data[snout_body_data$wolf=="dire", "body_length_cm"]*(.1+runif(25,0,1)*.01)
-write.csv(snout_body_data, "snout_body_data.csv", row.names = F)
-rm(snout_body_data)
-```
+wolves in regards to this relationship? Data is available using
 
 ```{r}
 snout_body_data <- read.csv("snout_body_data.csv", stringsAsFactors = T)
@@ -165,44 +127,13 @@ Make sure you include
 
 -   results from statistical test (1 point)
 
--   clear explanation of how results relate to your stated hypotheses
-    (1.5 point)
-
-    ```{r}
-    snout_body_data_lm <- lm(snout_length_cm~body_length_cm*wolf, snout_body_data)
-    plot(snout_body_data_lm)
-    ```
-
-```{r}
-Anova(snout_body_data_lm, type="III")
-```
-
-```{r}
-snout_body_data_lm_gray <- lm(snout_length_cm~body_length_cm, 
-                         snout_body_data[snout_body_data$wolf=="gray",])
-plot(snout_body_data_lm_gray)
-Anova(snout_body_data_lm_gray, type="III")
-summary(snout_body_data_lm_gray)
-```
-
-```{r}
-snout_body_data_lm_dire <- lm(snout_length_cm~body_length_cm, 
-                         snout_body_data[snout_body_data$wolf=="dire",])
-plot(snout_body_data_lm_dire)
-Anova(snout_body_data_lm_dire, type="III")
-summary(snout_body_data_lm_dire)
-```
+-   clear explanation of how results relate to your stated hypotheses.
+    Make sure to specify what your results say about the snout length -
+    body length relationship(1.5 point)
 
 ## 4
 
 Plot the data from question 3
-
-```{r}
-library(ggplot2)
-ggplot(snout_body_data, aes(x=body_length_cm, y=snout_length_cm, color=wolf))+
-  geom_point()+
-  geom_smooth(method='lm')
-```
 
 ## 5
 
@@ -224,7 +155,3 @@ How would you analyze the data. Make sure you include
 
 -   clear explanation of how results relate to your stated hypotheses
     (1.5 point)
-
-```{r}
-binom.test(18,25,.18)
-```
