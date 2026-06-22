@@ -1,0 +1,313 @@
+---
+title: "2024 Fall 78001/78002 Exam Creations"
+bibliography: ref_exam_fall_2024.bib
+format:
+  html:
+    embed-resources: true
+    toc: true
+    toc-float: true
+    toc-depth: 6
+    code-fold: false
+editor:
+  visual:
+    wrap: 72
+  source:
+    wrap: 72
+---
+
+## Instructions! Read this first.
+
+The exam is open note, open course website, open class-related code
+repositories (mine and those you produced in class). However, you may
+not get external help ( from other students, directed internet searches,
+etc.). Please update the statement below to acknowledge these
+instructions (and that you can use git).
+
+I, INSERT YOUR NAME HERE, promise to not seek external help on the exam.
+I understand any academic issues will result in a D or F on the exam or
+in the class and be reported to the Dean of Students. Infractions will
+also result in me being unable to obtain a letter of recommendation from
+the department for professional school applications.
+
+For all questions, the statement is based on what you might hear from a colleague 
+(e.g., "How do I analyze this?"). This is like when you get a call to review a
+paper. Please answer questions succinctly but with necessary details on all
+required steps/concerns you might need to consider.
+
+The exam should be uploaded to Blackboard by Friday, 12/20/24, at noon.
+If you have issues with Blackboard you can also email it to me, but
+please upload to Blackboard if at all possible (this is CUNY policy
+unfortunately).
+
+Good luck!
+
+## Background
+
+Southern resident orcas (*Orcinus orca*) in the Pacific Northwest have
+recently been spotted wearing salmon on their heads.
+
+[![Photograph By Ocean Wise, DFO Marine Mammal License,
+MML18](images/whale_hat.png)](https://www.nationalgeographic.com/animals/article/orcas-puget-sound-salmon-hats-killer-whales)
+
+This behavior was also observed in the 1980's, when it spread among pods
+[@whitehead2004], but has rarely been observed since.
+
+Since this is an unusual event, there is interest in both describing it
+and trying to determine why it is happening. Long-term data on orcas
+make some of this possible, as does community science. A graduate
+student friend who is interested in this topic is mining the data. They
+ask you for help with analysis.
+
+## Making the data for first few questions
+
+Need to make here and then export for exams and solutions
+
+```{r}
+set.seed(16)
+whale_yearly_data <-data.frame(year=1987:2024)
+whale_yearly_data$population_size <- round(runif(nrow(whale_yearly_data), 60,90))
+for (i in 1:nrow(whale_yearly_data)){
+  if (whale_yearly_data$year[i] != 1987 & whale_yearly_data$year[i]!=2024){
+    whale_yearly_data$hat_wearers[i] <- rbinom(1, whale_yearly_data$population_size[i], .05)
+  }
+  else(whale_yearly_data$hat_wearers[i] <- rbinom(1, whale_yearly_data$population_size[i], .23))
+}
+whale_yearly_data$prop_wearing_salmon <- whale_yearly_data$hat_wearers/whale_yearly_data$population_size
+whale_yearly_data$salmon_status <- factor(sample(c("high", "low", "closed"),nrow(whale_yearly_data), replace = T))
+```
+
+```{r}
+saveRDS(whale_yearly_data, "whale_yearly_data.RDS")
+remove(whale_yearly_data)
+```
+
+```{r}
+whale_yearly_data <- readRDS("whale_yearly_data.RDS")
+```
+
+
+## 1
+
+Although "salmon hats" have often been described as fad-based events
+that only last for short periods of time, your friend finds this claim
+has not been investigated. As noted by Monika Wieland Shields, director
+of the Orca Behavior Institute in Washington [@bittel2024],
+
+> “In my opinion it's a stretch to say it was a salmon hat, and an even
+> greater stretch to say the fad is back off a single photo....it’s
+> quite possible that this has been part of their behavioral repertoire
+> that they’ve been doing since time immemorial, and it was just noticed
+> by humans in the ‘80s.”
+
+To consider this, they reviewed photos of Northwest orcas from the past
+`{r} nrow(whale_yearly_data)` summers and falls (from the craze of 1987 to the
+recent resurgence). In each year, they recorded if each orca in the
+local pods (the populations are relatively small) was ever recorded with
+a salmon hat. They found that outside of 1987 and 2024, orcas were only
+spotted wearing head gear
+`{r} round(mean(whale_yearly_data[whale_yearly_data$year != 1987 & whale_yearly_data$year!=2024, "prop_wearing_salmon"]), 2)*100`%
+of the time. In 2024, `{r} whale_yearly_data[whale_yearly_data==2024, "hat_wearers"]`
+out of `{r} whale_yearly_data[whale_yearly_data==2024, "population_size"]` orcas were
+spotted wearing hats. How would you recommend they analyze this data?
+
+Analyze the data. Make sure you include
+
+-   null hypothesis (1 point)
+
+-   alternative hypothesis (1 point)
+
+-   explanation for test you will use (1.5 point)
+
+-   results from statistical test (1 point)
+
+```{r}
+binom.test(15, 87, .05)#lab
+```
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+
+## 2
+
+In 2024, 8 out of 40 males wore salmon hats, while 7 out of 47 females
+wore them. Your friend analyzed the data as a t-test (below is some output they 
+share with you)
+
+```{r}
+t.test(c(7,8), c(40,47))
+```
+
+and was excited to get a p-value close to 0.05. They want to know how
+you feel about their analysis (How would you analyze this data to determine if there are any differences
+in salmon hats between males and females?) and how they should describe 
+results that
+are close to 0.05. Answer both these questions, and in doing make sure you
+define a p-value.
+
+
+
+```{r}
+chisq.test(matrix(c(8,7,40-8, 47-7), 2,2, byrow = T)) 
+```
+
+## 3
+
+One of the hypothesis is that more orcas wear hats when salmon are more
+common (maybe because they have more time to play). Although salmon
+biomass each year isn't known, the local fishery has historically had
+*high*, *low*, and *closed* (meaning no fishing was allowed due to low
+numbers) years. Your friend has this data for each year. How should they
+analyze it? If it helps, this is the first few rows of their data
+
+```{r}
+head(whale_yearly_data)
+```
+
+where
+
+-   *year* is year of observation
+
+-   *population_size* is number of resident whales
+
+-   *hat_wearers* is the number of whales that wore hats at least once
+
+-   *prop_wearing_salmon* is the proportion observed wearing hats at least
+    once
+
+-   *salmon_status* is the status of the salmon fishery (high, low, or
+    closed)
+
+    ```{r}
+    glm_model <- glm(cbind(whale_yearly_data$hat_wearers, whale_yearly_data$population_size-whale_yearly_data$hat_wearers)~salmon_status, whale_yearly_data, family = binomial)
+    summary(glm_model)
+    library(car)
+    Anova(glm_model, type = "III")
+    library(multcomp)
+    summary(glht(glm_model, linfct = mcp(salmon_status = "Tukey")))
+
+    glm_model_quasi <- glm(cbind(whale_yearly_data$hat_wearers, whale_yearly_data$population_size-whale_yearly_data$hat_wearers)~salmon_status, whale_yearly_data, family = "quasibinomial")
+    Anova(glm_model_quasi, type = "III")
+    summary(glht(glm_model_quasi, linfct = mcp(salmon_status = "Tukey")))
+    ```
+
+## 4
+
+Another theory is that larger whales tend to wear hats. Your friend has
+weights for the `{r} whale_yearly_data[whale_yearly_data==2024, "population_size"]`
+orcas that wore hats in 2024. Their weights are displayed below
+
+```{r}
+set.seed(18)
+orca_weights <- data.frame(weight = runif(15, 3500, 6000))
+saveRDS(orca_weights, "orca_weights.RDS")
+remove(orca_weights)
+```
+
+```{r, include=F}
+orca_weights <- readRDS("orca_weights.RDS")
+```
+
+
+```{r}
+library(ggplot2)
+ggplot(orca_weights, aes(x=weight))+
+  geom_histogram()+
+  labs(x="Weight (kg)", y= "Frequency" )
+```
+
+The average weight of an orca is 4077 kg. How could they analyze this
+data?  Should they be concerned about the distribution of weights?
+
+```{r}
+t.test(orca_weights$weight, mu=4077)
+```
+
+## 5
+
+Other things besides wearing hats could influence whale size. Your
+friend gathers more data on whether whales wear hats, their gender, and
+their weight. This is the first few rows of their data
+
+```{r}
+set.seed(22)
+whale_data_2024 <- data.frame(hat_wearer = factor(c(rep("yes", 15), rep ("no",87-15))),
+                              gender = factor(c(rep("male",8), rep("female",7), rep("male", 40-8),rep("female",47-7))),
+                              weight = c(rev(sort(orca_weights$weight)),rnorm(40-8, 5366, 200), rnorm(47-7, 3000, 200)))
+saveRDS(whale_data_2024, "whale_data_2024.RDS")
+remove(whale_data_2024)
+```
+
+```{r}
+whale_data_2024 <-readRDS("whale_data_2024.RDS")
+```
+
+```{r}
+head(whale_data_2024)
+```
+
+where
+
+-   *hat wearer* denotes if orca wears a hat
+
+-   *gender* denotes male and female
+
+-   *weight* is orca weight in kg
+
+How would you analyze the data?
+
+
+```{r}
+impact <- lm (weight~hat_wearer*gender, whale_data_2024)
+plot(impact)
+Anova(impact, type="III")
+
+impact_male <- lm (weight~hat_wearer, whale_data_2024[whale_data_2024$gender=="male",])
+plot(impact_male)
+Anova(impact_male, type="III")
+
+impact_female <- lm (weight~hat_wearer, whale_data_2024[whale_data_2024$gender=="female",])
+plot(impact_female)
+Anova(impact_female, type="III")
+summary(impact_female)
+```
+
+
+
+## 6
+
+Graph the data from question 5.**Regardless of what you did for #5 (there are multiple ways to answer it) focus on weight as the response variable for the graph.**
+
+
+
+## 7 
+
+Orca weight is hard to obtain. For future years your friend would like
+to just use length. They give you a new dataset with that includes length. 
+
+```{r} 
+set.seed(22)
+whale_data_2024_with_length <- whale_data_2024
+whale_data_2024_with_length$length <- c(rnorm(8, 6.2, .3), 
+                                        rnorm(7, 5.4, .5),
+                                        rnorm(40-8, 6.2, .3), 
+                                        rnorm(47-7, 5.4, .5))
+saveRDS(whale_data_2024_with_length, "whale_data_2024_with_length.RDS")
+remove(whale_data_2024_with_length)
+```
+
+```{r}
+whale_data_2024_with_length <-readRDS("whale_data_2024_with_length.RDS")
+```
+
+
+where
+
+* *length* is orca length in m
+
+How could they determine if this shortcut is appropriate?
+
+```{r}
+lwr <- lm(length~weight, whale_data_2024_with_length)
+plot(lwr)
+Anova(lwr, type="III")
+```

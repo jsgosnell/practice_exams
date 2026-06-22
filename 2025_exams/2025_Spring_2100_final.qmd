@@ -1,0 +1,157 @@
+---
+title: "2025 Spring BIO 2100 Final"
+bibliography: ref_exam_spring_2025.bib
+format:
+  html:
+    embed-resources: true
+    toc: true
+    toc-float: true
+    toc-depth: 6
+    code-fold: false
+editor:
+  visual:
+    wrap: 72
+  source:
+    wrap: 72
+---
+
+## Instructions! Read this first.
+
+The exam is open note, open course website, open class-related code
+repositories (mine and those you produced in class). However, you may
+not get external help ( from other students, directed internet searches,
+etc.). Please update the statement below to acknowledge these
+instructions (and that you can use git).
+
+I, INSERT YOUR NAME HERE, promise to not seek external help on the exam.
+I understand any academic issues will result in a D or F on the exam or
+in the class and be reported to the Dean of Students. Infractions will
+also result in me being unable to obtain a letter of recommendation from
+the department for professional school applications.
+
+The exam should be committed and pushed to github by Friday, 5/16/2025,
+at 12:30 PM. You can also commit and push along the way, but please mark
+your final commit (when you are finished) with the comment **Finished -
+ready to grade!.**
+
+For all questions, the statement is based on what you might hear from a
+colleague or client if you were a statistical consultant (e.g., "How do
+I analyze this?"). Please answer questions succinctly but with necessary
+details on all required steps/concerns you might need to consider.
+
+While the exam is based on a realistic scenario (with citations), some
+data and scenarios are fictional and contrived for the exam (i.e., don't
+quote all this as fact!).
+
+Good luck!
+
+## Background
+
+Earlier this year a company announced they had "resurrected" dire wolves
+by gene editing gray wolf embryos [@newsat2025].
+
+[![Screenshot from Science News announcing dire wolf resurrection
+(4/11/2025)](Screenshot%202025-05-13%20152253.png)](https://www.science.org/doi/pdf/10.1126/science.ady0869)
+
+Colossal Biosciences, the company that led the dire wolf project, has
+asked you, a summer intern, to help analyze some of their data. It turns
+out they actually have produced a lot more wolves than they shared with
+the public (this is the made up part of the exam!).
+
+## 1
+
+Dire wolves were larger than today's gray wolves. The average male gray
+wolf weighs 31 kg. Data below on 26 adult dire wolves the company has
+produced is available using
+
+```{r}
+male_dire_weight <- read.csv("male_dire_weight.csv", stringsAsFactors = T)
+```
+
+Analyze the data to compare weights of dire and gray wolves. Make sure
+you include
+
+-   null hypothesis (1 point)
+
+-   alternative hypothesis (1 point)
+
+-   explanation for test you will use (1.5 point)
+
+-   results from statistical test (1 point)
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+
+## 2
+
+A few years later, the company has produced three "lines" of dire wolves
+using different gene editing techniques. Is there any evidence the three
+lines differ in weight? Data is available using
+
+```{r}
+male_dire_weight_groups <- read.csv("male_dire_weight_groups.csv", stringsAsFactors = T)
+```
+
+Analyze the data. Make sure you include
+
+-   null hypothesis (1 point)
+
+-   alternative hypothesis (1 point)
+
+-   explanation for test you will use (1.5 point)
+
+-   results from statistical test (1 point)
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+
+## 3
+
+Dire wolves are also supposed to have smaller snouts relative to their
+body length than regular wolves. The company provided data from 25 of
+their dire wolves and 26 of the gray wolves that were used to source
+embryos. Is there evidence the dire wolves are different than gray
+wolves in regards to this relationship? Data is available using
+
+```{r}
+snout_body_data <- read.csv("snout_body_data.csv", stringsAsFactors = T)
+```
+
+Make sure you include
+
+-   null hypothesis (1 point)
+
+-   alternative hypothesis (1 point)
+
+-   explanation for test you will use (1.5 point)
+
+-   results from statistical test (1 point)
+
+-   clear explanation of how results relate to your stated hypotheses.
+    Make sure to specify what your results say about the snout length -
+    body length relationship(1.5 point)
+
+## 4
+
+Plot the data from question 3
+
+## 5
+
+The company also wants to know if the proportion of dire wolves born
+with white fur (a hallmark of dire wolves) is different than that of the
+gray wolves that provided the embryos (ignore any genetic issues here!).
+18% of the parent gray wolves were white. For the litter in question, 18
+out of 25 wolves were white. How would statistically analyze this?
+
+How would you analyze the data. Make sure you include
+
+-   null hypothesis (1 point)
+
+-   alternative hypothesis (1 point)
+
+-   explanation for test you will use (1.5 point)
+
+-   results from statistical test (1 point)
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)

@@ -1,0 +1,161 @@
+---
+title: "2024 Fall 78001 Midterm Solutions"
+bibliography: references.bib
+format: docx
+toc: false
+number-sections: false
+highlight-style: github
+---
+
+## Instructions! Read this first.
+
+The exam is open note, open course website, open class-related code
+repositories (mine and any you have produced). However, you may
+not get external help ( from other students, directed internet searches,
+etc.). Please update the statement below to acknowledge these
+instructions.
+
+I, INSERT YOUR NAME HERE, promise to not seek external help on the exam.
+I understand any academic issues will result in a D or F on the exam or
+in the class and be reported to the Dean of Students. 
+
+The exam should be uploaded to Blackboard by Wednesday, 10/16, at 11:59 PM.  If
+you have issues with Blackboard you can also email it to me, but please upload
+to Blackboard if at all possible (this is CUNY policy unfortunately).
+
+Good luck!
+
+## Background
+
+A recent paper [@piotto2024] found that micropredation (when animals eat
+only a portion of a target prey) by gulls may be important to survival
+in southern right whale (*Eubalaena australis*) calves in Argentina.
+These predation events cause lesions to develop on whales that may
+increase susceptibilty to infection; attempts to prevent them may reduce
+maternal energy stores and time spent feeding and resting.
+
+A new graduate student in your program is interested in this topic and
+how it may be mediated by food availability, especially in urban
+systems. In 2023 over a quarter of the world's North Atlantic right
+whale population was observed off Long Island [@riley2024], and while
+kelp gulls *Larus dominicanus* are not found in New York, a sister
+species (great black-backed gull (*Larus marinus*)) is. Great
+black-backed gulls are known to be extremely aggressive predators. They
+are also known to forage at dumps [@cavanaugh].
+
+## 1
+
+The student collected data on whales off the coast of Long Island using
+photos.\
+The photos showed birds were present in the area and included a few
+direct acts of attack. Images of whales showed that 44 out of 117 of
+whales have lesions! They are excited to write up their first conference
+abstract about their work. In a lab presentation noting their follow-up
+study, they state that seabirds lead to lesions in almost a third of
+whales. Do you have any helpful feedback to offer on this
+interpretation? (you may want to look at question 2 before answering so
+you don't answer both here - just explain any basic issues here)
+
+## 2
+
+What might be another way to assess how birds impact the occurrence of
+lesions? In answering this focus on experimental design - you don't have
+to know how to analyze the data (yet).
+
+## 3
+
+Your friend follows up with more information. In general, whales have
+lesions 28% of the time for a variety of reasons. Knowing this, how
+would you analyze the original data (44 out of 117 whales show lesions
+in their photographs)? What hypothesis would you be testing?
+
+You don't have to give the results, just explain and justify the
+analysis procedure as if you were writing it up for the methods portion
+of a paper. Make sure you state a null hypothesis.
+
+
+```{r}
+binom.test(44,117,.28)#class
+```
+
+## 4
+
+Upon analyzing this data, your friend is confused. The outcome states
+that the p-value is 0.02, but also provides a probability of success
+is 0.37. They know they are supposed to compare something to
+.05...Explain what these values are and how to interpret them to your
+friend.
+
+## 5
+
+In a follow-up study, your friend gets information on gull attacks on
+whales in areas with low (near dumps, which attract birds to land),
+medium (in open waters), and high (near fishing vessel routes) gull
+density (n=200 per activity type). They then monitor the stress of
+whales in these areas (through measurements of glucocorticoid levels
+(GC) obtained by collecting whale feces, following work by @lemos2020)
+to see if the whales showed any differences in anxiety in these areas.
+The data look something like this
+
+```{r, include=F}
+#make data and save as rds
+set.seed(19)
+whale_stress_lecture <- data.frame(gull_activity = c(rep("low", 200), rep("medium", 200),
+                                             rep("high",200)), 
+                           GC = c(rbeta(200,1,3)*25,
+                           rbeta(200,1,3)*50,
+rbeta(200,1,3)*100))
+
+whale_stress_lecture$gull_activity <- factor(whale_stress_lecture$gull_activity, c("low", "medium", "high"))
+
+saveRDS(whale_stress_lecture, "whale_stress_lecture.RDS")
+remove(whale_stress_lecture)
+```
+
+```{r, echo=F, warning=F, message=F}
+whale_stress_lecture <- readRDS("whale_stress_lecture.RDS")
+library(ggplot2)
+library(ggtext)
+ggplot(whale_stress_lecture, aes(x=GC, fill=gull_activity))+
+  geom_histogram()+
+  facet_wrap(~gull_activity, ncol=1)+
+  labs(x= "GC concentration ng g<sup>-1</sup>", 
+       fill= "Gull activity in area")+
+   theme(
+    axis.title.x = element_markdown(),
+    axis.title.y = element_markdown()
+  )
+```
+
+How would you recommend analyzing the data? Please describe the best
+option and appropriate steps to take given possible results.
+
+```{r}
+whale_stress_lm <- lm(GC~gull_activity, whale_stress_lecture)
+plot(whale_stress_lm)
+library(car)
+Anova(whale_stress_lm, type="III")
+library(multcomp)
+```
+
+## 6
+
+Another study uses low and high activity levels and compares calf
+survival in these areas.
+
+|                 |                     |                      |
+|-----------------|---------------------|----------------------|
+|                 | *Low gull activity* | *High gull activity* |
+| *Calf survived* | 31                  | 21                   |
+| *Calf died*     | 2                   | 8                    |
+
+How would you analyze this data? Make sure to include a null hypothesis
+and explanation of test you chose, why you chose it, and how to
+interpret potential results.
+
+```{r}
+chisq.test(matrix(c(31,21,2,8), 2, 2, byrow=T))
+fisher.test(matrix(c(31,21,2,8), 2, 2, byrow=T))
+```
+
+## References

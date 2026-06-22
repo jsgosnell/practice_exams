@@ -36,8 +36,9 @@ ready to grade!.**
 
 For all questions, the statement is based on what you might hear from a
 colleague or client if you were a statistical consultant (e.g., "How do
-I analyze this?"). Please answer questions succinctly but with necessary
-details on all required steps/concerns you might need to consider.
+I analyze this?"). This is like when you get a call to review a paper.
+Please answer questions succinctly but with necessary details on all
+required steps/concerns you might need to consider.
 
 While the exam is based on a realistic scenario (with citations), some
 data and scenarios are fictional and contrived for the exam (i.e., don't
@@ -48,7 +49,7 @@ Good luck!
 ## Background
 
 Earlier this year a company announced they had "resurrected" dire wolves
-by gene editing gray wolf embryos [@newsat2025].
+by gene editing gray wolf embryos\@newsat2025.
 
 [![Screenshot from Science News announcing dire wolf resurrection
 (4/11/2025)](Screenshot%202025-05-13%20152253.png)](https://www.science.org/doi/pdf/10.1126/science.ady0869)
@@ -65,28 +66,61 @@ wolf weighs 31 kg. Data below on 26 adult dire wolves the company has
 produced is available using
 
 ```{r}
+set.seed(29)
+male_dire_weight <- data.frame(mass_kg = c(round(rnorm(26, 38, 4),2)))
+write.csv(male_dire_weight, "male_dire_weight.csv", row.names = F)
+rm(male_dire_weight)
+```
+
+```{r}
 male_dire_weight <- read.csv("male_dire_weight.csv", stringsAsFactors = T)
 ```
 
-Analyze the data to compare weights of dire and gray wolves. Make sure
-you include
+Analyze the data. Make sure you include
 
 -   null hypothesis (1 point)
 
+    -   H~0~: the average weight of dire wolves is 31 kg
+
 -   alternative hypothesis (1 point)
+
+    -   H~A~: the average weight of dire wolves is not 31 kg
 
 -   explanation for test you will use (1.5 point)
 
+    -   I would use a one-sample t-test because its continuous data from
+        a single population. I also don't know the variance but believe
+        the means are normally distributed.
+
 -   results from statistical test (1 point)
 
--   clear explanation of how results relate to your stated hypotheses
-    (1.5 point)
+    ```{r}
+    t.test(male_dire_weight$mass_kg, mu=31)
+    ```
+
+    -   clear explanation of how results relate to your stated
+        hypotheses (1.5 point)
+
+        -   Given a t~25~=8.95 and corresponding p\<.001, I reject the
+            null hypothesis. It appears the dire wolves are larger than
+            31 kg.
+
+```{r}
+t.test(male_dire_weight$mass_kg, mu=31)
+```
 
 ## 2
 
 A few years later, the company has produced three "lines" of dire wolves
 using different gene editing techniques. Is there any evidence the three
-lines differ in weight? Data is available using
+lines differ in mean weight? Data is available using
+
+```{r}
+set.seed(29)
+male_dire_weight_groups <- data.frame(line = c(rep("a", 26), rep("b", 24), rep("c", 27)), mass_kg = c(round(rnorm(77, 38, 4),2)))
+write.csv(male_dire_weight_groups, "male_dire_weight_groups.csv", row.names = F)
+rm(male_dire_weight_groups)
+```
 
 ```{r}
 male_dire_weight_groups <- read.csv("male_dire_weight_groups.csv", stringsAsFactors = T)
@@ -96,14 +130,44 @@ Analyze the data. Make sure you include
 
 -   null hypothesis (1 point)
 
+    -   H~0~: there is no difference in mean/average weight among the
+        three lines
+
+    -   H~0~: the average weight of the three lines are equal to each
+        other/are the same
+
 -   alternative hypothesis (1 point)
+
+    -   H~A~: there is a difference in mean/average weight among the
+        three lines
+
+    -   H~A~: the average weight of the three lines are not equal to
+        each other/are the same
 
 -   explanation for test you will use (1.5 point)
 
+    -   I will use an anova/lm to consider how means differ among
+        groups.
+
 -   results from statistical test (1 point)
+
+    ```{r}
+    group_lm <- lm(mass_kg~line, male_dire_weight_groups)
+    plot(group_lm)
+    ```
+
+    ```{r}
+    library(car)
+    Anova(group_lm, type="III")
+    ```
 
 -   clear explanation of how results relate to your stated hypotheses
     (1.5 point)
+
+    -   Assumptions for the test were checked and met. Given a resulting
+        F~2,74~=1.85 and corresponding p = .17, I fail to reject the
+        null hypothesis. Line does not appear to impact average wolf
+        weight.
 
 ## 3
 
@@ -111,7 +175,17 @@ Dire wolves are also supposed to have smaller snouts relative to their
 body length than regular wolves. The company provided data from 25 of
 their dire wolves and 26 of the gray wolves that were used to source
 embryos. Is there evidence the dire wolves are different than gray
-wolves in regards to this relationship? Data is available using
+wolves? Data is available using
+
+```{r}
+set.seed(19)
+snout_body_data <- data.frame(wolf = c(rep("gray", 26), rep("dire", 25)), body_length_cm = c(rep(rnorm(51, 60*2.54, 6))))
+snout_body_data$snout_length_cm <- NA
+snout_body_data[snout_body_data$wolf=="gray", "snout_length_cm"] <- snout_body_data[snout_body_data$wolf=="gray", "body_length_cm"]*(.2+runif(26,0,1)*.01)
+snout_body_data[snout_body_data$wolf=="dire", "snout_length_cm"] <- snout_body_data[snout_body_data$wolf=="dire", "body_length_cm"]*(.1+runif(25,0,1)*.01)
+write.csv(snout_body_data, "snout_body_data.csv", row.names = F)
+rm(snout_body_data)
+```
 
 ```{r}
 snout_body_data <- read.csv("snout_body_data.csv", stringsAsFactors = T)
@@ -121,19 +195,102 @@ Make sure you include
 
 -   null hypothesis (1 point)
 
+    -   H~0~: snout length is the same among wolf types
+
+    -   H~0~: snout length is not related to body length
+
+    -   H~0~: the relationship between snout length and body length does
+        not differ among wolf types
+
 -   alternative hypothesis (1 point)
+
+    -   H~A~: snout length is not the same among wolf types
+
+    -   H~A~:snout length is related to body length
+
+    -   H~A~: the relationship between snout length and body length does
+        differ among wolf types
 
 -   explanation for test you will use (1.5 point)
 
+    -   I will use an ANCOVA because I'm considering a numerical
+        response variable and how it is explained by both a numerical
+        explanatory variable and a categorical explanatory variable and
+        potential interactions among them.
+
 -   results from statistical test (1 point)
 
--   clear explanation of how results relate to your stated hypotheses.
-    Make sure to specify what your results say about the snout length -
-    body length relationship(1.5 point)
+    ```{r}
+    snout_body_data_lm <- lm(snout_length_cm~body_length_cm*wolf, snout_body_data)
+    plot(snout_body_data_lm)
+    ```
+
+    Asssumptions appear to be met, so I continued with analysis.
+
+    ```{r}
+    Anova(snout_body_data_lm, type="III")
+    ```
+
+    There is a significant interaction between body and snout length
+    based of wolf type (F~1,47~=27.6, p \<.01), so I considered the
+    relationship for each wolf type.
+
+    ```{r}
+    snout_body_data_lm_gray <- lm(snout_length_cm~body_length_cm, snout_body_data[snout_body_data$wolf == "gray",])
+    plot(snout_body_data_lm_gray)
+    ```
+
+    ```{r}
+    Anova(snout_body_data_lm_gray, type="III")
+    summary(snout_body_data_lm_gray)
+    ```
+
+    ```{r}
+    snout_body_data_lm_dire <- lm(snout_length_cm~body_length_cm, snout_body_data[snout_body_data$wolf == "dire",])
+    plot(snout_body_data_lm_dire)
+    Anova(snout_body_data_lm_dire, type="III")
+    summary(snout_body_data_lm_dire)
+    ```
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+
+    -   Given the significant interaction, I considered the snout-body
+        length relationship for each wolf type. Although the
+        relationship is significant for both types, it appears that the
+        snout length is shorter relative to body length for dire wolves
+        compared to gray wolves (slopes of .08 vs .2, respectively; all
+        p\<.01).
 
 ## 4
 
 Plot the data from question 3
+
+```{r}
+library(ggplot2)
+ggplot(snout_body_data, aes(x=body_length_cm, y=snout_length_cm, color=wolf))+
+  geom_point()+
+  geom_smooth(method='lm', se=F)+
+  labs(title="Snout and body lengths of wolves",
+       subtitle = "Gray and dire differ in snout-body length relationship",
+       y="Snout length (cm)",
+       x = "Body length (cm)",
+       color= "Wolf type")+
+  theme_bw()
+```
+
+```{r}
+ggplot(snout_body_data, aes(x=body_length_cm, y=snout_length_cm, color=wolf))+
+  geom_point()+
+  geom_smooth(method='lm', se=F)+
+  labs(title="Snout and body lengths of wolves",
+       subtitle = "Gray and dire differ in snout-body length relationship",
+       y="Snout length (cm)",
+       x = "Body length (cm)",
+       color= "Wolf type")+
+  theme_bw()+
+  facet_wrap(~wolf)
+```
 
 ## 5
 
@@ -147,11 +304,26 @@ How would you analyze the data. Make sure you include
 
 -   null hypothesis (1 point)
 
+    -   H~0~: proportion of white dire wolves is equal to 18%
+
 -   alternative hypothesis (1 point)
+
+    -   H~A~: proportion of white dire wolves is not equal to 18%
 
 -   explanation for test you will use (1.5 point)
 
+    -   We will analyze this data using a binomial test because we are
+        comparing a proportion to a set value
+
 -   results from statistical test (1 point)
+
+    ```{r}
+    #could use prop.test instead
+    binom.test(18, 25, .18)
+    ```
 
 -   clear explanation of how results relate to your stated hypotheses
     (1.5 point)
+
+    -   Given a p-value \<.01, I reject the null hypothesis; it appears
+        dire wolves are more likely to be white.
