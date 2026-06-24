@@ -74,6 +74,10 @@ were still moving.
 
 This may be an example of where statistics is not needed. Why?
 
+No bees were expected to survive, but almost all (20/21) did; this
+suggests a clear pattern that does not requires p-value/test-based
+analysis.
+
 ## 2
 
 An editor suggested a short comment noting these results should have a
@@ -82,9 +86,17 @@ to analyze the data. Make sure you include
 
 -   null hypothesis (1 point)
 
+    -   H~O~: all the bees should have died due to water, so
+        p\[survival\]=0
+
 -   alternative hypothesis (1 point)
 
+    -   H~A~: p\[survival\] $\neq$ 0
+
 -   explanation for test you will use (1.5 point)
+
+    -   I would use a binomial test because i have data from 2
+        categories and am testing a proportion
 
 -   results from statistical test (1 point)
 
@@ -95,6 +107,10 @@ to analyze the data. Make sure you include
 -   clear explanation of how results relate to your stated hypotheses
     (1.5 point)
 
+    -   Since the p-value is less than .05 (p = \<.01), I reject the
+        null hypothesis.\
+        It appears that bees are able to survive underwater.
+
 ## 3
 
 A fellow student is confused about your analysis. They focused on
@@ -102,6 +118,12 @@ mortality (opposite of survival) and found a signal of `r 1/21`
 <!--new trick! render this (or look at the html) and note it gives you the answer! this is an in-line code chunk  -->
 in the data and took that as p. Why is your value different? Make sure
 you explain what a p-value is!
+
+They found the proportion (sometimes call the p parameter) focused on
+mortality (we did survival), not the p-value. A p-value is the
+likelihood of finding the signal you did or something as or more extreme
+if the null hypothesis is true and we sampled the population multiple
+times.
 
 ## 4
 
@@ -174,10 +196,17 @@ you wish to use the combined data. Note the following columns are used
 
 ```{r}
 bee_data <- read.csv("data_flooding.csv", stringsAsFactors = T)
+
+```
+
+```{r}
+bee_data <- read.csv("Data_flooding.csv", stringsAsFactors = T)
 library(plyr)
 bee_data$Submersion <-revalue(bee_data$Submersion, c("ctl"="control")) 
-bee_data <- bee_data[bee_data$Time==8 & bee_data$Duration==24 & bee_data$Weight != "NA"|
-                       bee_data$Time==8 & bee_data$Submersion=="control" & bee_data$Weight != "NA",]
+bee_data <- bee_data[bee_data$Time==8 & bee_data$Duration==24 & bee_data$Weight != "NA" &
+                       !is.na(bee_data$Duration)|
+                       bee_data$Time==8 & bee_data$Submersion=="control" & bee_data$Weight != "NA" &
+                        !is.na(bee_data$Duration),]
 bee_table <- table(bee_data[bee_data$Time==8 & bee_data$Duration==24|
                        bee_data$Time==8 & bee_data$Submersion=="control","Submersion"],
       bee_data[bee_data$Time==8 & bee_data$Duration==24|
@@ -190,9 +219,18 @@ Analyze the data. Make sure you include
 
 -   null hypothesis (1 point)
 
+    -   H~O~: survival is independent of treatment *OR* proportion
+        surviving is the same for each treatment
+
 -   alternative hypothesis (1 point)
 
+    -   H~A~: survival is not independent of treatment *OR* proportion
+        surviving is not the same for each treatment
+
 -   explanation for test you will use (1.5 point)
+
+    -   I will use a $\chi^2$ test since I'm comparing proportions among
+        various groups.
 
 -   results from statistical test (1 point)
 
@@ -200,9 +238,15 @@ Analyze the data. Make sure you include
     chisq.test(bee_table)
     ```
 
+    Since the $\chi^2$ test returned a warning, I checked expected
+    outcomes to make sure they met assumptinos
+
     ```{r}
     chisq.test(bee_table)$expected
     ```
+
+    Given 50% of the groups are less than 5, I used a Fisher test
+    instead
 
     ```{r}
     fisher.test(bee_table)
@@ -211,16 +255,20 @@ Analyze the data. Make sure you include
 -   clear explanation of how results relate to your stated hypotheses
     (1.5 point)
 
+    -   We fail to reject the null hypothesis (p=.8493).
+
 ## 5
 
 Data was also collected on the weights of the bees (*Weight* column in
 **bee_data**). Plot the weight data to consider differences among
 submersion treatments.
 
+Several options here:
+
 ```{r}
 library(Rmisc)
 library(ggplot2)
-bee_summary <- summarySE(bee_data, measurevar="Weight", groupvars="Submersion")
+bee_summary <- summarySE(bee_data[!is.na(bee_data$Submersion),], measurevar="Weight", groupvars="Submersion")
 ggplot(bee_summary, aes(x=Submersion, y=Weight)) +
     geom_point(size=3) +
     geom_errorbar(aes(ymin=Weight - ci, ymax=Weight + ci), width=0) +
@@ -230,13 +278,24 @@ ggplot(bee_summary, aes(x=Submersion, y=Weight)) +
 ```
 
 ```{r}
-ggplot(bee_data, aes(y=Weight, x=Submersion, color=Submersion)) +
+ggplot(bee_data[!is.na(bee_data$Submersion),], aes(y=Weight, x=Submersion, color=Submersion)) +
   geom_jitter() +
   labs(title="Masses of bees used in various treaments",
        subtitle = "There is no apparent difference in weights",
        y= "Bee weight (mg)",
        x= "Treatment")+
   guides(color=F)
+```
+
+```{r}
+ggplot(bee_data[!is.na(bee_data$Submersion),], aes(x=Weight, fill=Submersion)) +
+  geom_histogram() +
+  labs(title="Masses of bees used in various treaments",
+       subtitle = "There is no apparent difference in weights",
+       y= "Bee weight (mg)",
+       x= "Treatment")+
+  guides(fill=F)+
+  facet_wrap(~Submersion, ncol=1)
 ```
 
 ## 6
@@ -249,9 +308,18 @@ Investigate the question. Make sure you include
 
 -   null hypothesis (1 point)
 
+    -   H~O~: there is no difference in our bees from typical bees *OR*
+        mean weight ($\mu_{weight}$) = 450 mg
+
 -   alternative hypothesis (1 point)
 
+    -   H~O~: there is a difference in our bees from typical bees *OR*
+        mean weight ($\mu_{weight}$) $\neq$ 450 mg
+
 -   explanation for test you will use (1.5 point)
+
+    -   I will use a t-test to compare continuous data that I don't know
+        the standard deviation for (of the population) to a given value
 
 -   results from statistical test (1 point)
 
@@ -261,3 +329,6 @@ Investigate the question. Make sure you include
 
 -   clear explanation of how results relate to your stated hypotheses
     (1.5 point)
+
+    -   We reject the null hypothesis (t~48~=16.971, p\<.001). It
+        appears the bees in our study are larger.

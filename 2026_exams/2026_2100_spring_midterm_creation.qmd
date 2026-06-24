@@ -74,6 +74,8 @@ were still moving.
 
 This may be an example of where statistics is not needed. Why?
 
+
+
 ## 2
 
 An editor suggested a short comment noting these results should have a
@@ -181,8 +183,10 @@ you wish to use the combined data. Note the following columns are used
 bee_data <- read.csv("Data_flooding.csv", stringsAsFactors = T)
 library(plyr)
 bee_data$Submersion <-revalue(bee_data$Submersion, c("ctl"="control")) 
-bee_data <- bee_data[bee_data$Time==8 & bee_data$Duration==24 & bee_data$Weight != "NA"|
-                       bee_data$Time==8 & bee_data$Submersion=="control" & bee_data$Weight != "NA",]
+bee_data <- bee_data[bee_data$Time==8 & bee_data$Duration==24 & bee_data$Weight != "NA" &
+                       !is.na(bee_data$Duration)|
+                       bee_data$Time==8 & bee_data$Submersion=="control" & bee_data$Weight != "NA" &
+                        !is.na(bee_data$Duration),]
 bee_table <- table(bee_data[bee_data$Time==8 & bee_data$Duration==24|
                        bee_data$Time==8 & bee_data$Submersion=="control","Submersion"],
       bee_data[bee_data$Time==8 & bee_data$Duration==24|
