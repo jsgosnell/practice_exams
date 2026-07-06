@@ -1,0 +1,193 @@
+---
+title: "2026 Spring BIO 2100 Final Creation and Answers"
+subtitle: "33 points"
+bibliography: ref_2026_2100_spring_final.bib
+format:
+  html:
+    embed-resources: true
+    toc: true
+    toc-float: true
+    toc-depth: 6
+    code-fold: false
+editor:
+  visual:
+    wrap: 72
+  source:
+    wrap: 72
+---
+
+## Instructions! Read this first.
+
+The exam is open note, open course website, open class-related code
+repositories (mine and those you produced in class). However, you may
+not get external help ( from other students, AI, directed internet
+searches, etc.). Please update the statement below to acknowledge these
+instructions (and that you can use git).
+
+I, INSERT YOUR NAME HERE, promise to not seek external help on the exam.
+I understand any academic issues will result in a D or F on the exam or
+in the class and be reported to the Dean of Students. Infractions will
+also result in me being unable to obtain a letter of recommendation from
+the department for professional school applications.
+
+The exam should be committed and pushed to github by Monday, 5/18/2026,
+at 10:00 AM. You can also commit and push along the way, but please mark
+your final commit (when you are finished) with the comment **Finished -
+ready to grade!.**
+
+For all questions, the statement is based on what you might hear from a
+colleague (e.g., "How do I analyze this?"). This is like when you get a
+call to review a paper. Please answer questions succinctly but with
+necessary details on all required steps/concerns you might need to
+consider.
+
+While the exam is based on a realistic scenario (with citations), some
+data and scenarios are fictional and contrived for the exam (i.e., don't
+quote all this as fact!).
+
+Good luck!
+
+## Background
+
+Community science is a growing area where people who are not
+traditionally considered scientists assist with research projects. This
+can include providing data, assisting with project implementation, and
+analyzing data [@gosnell2023]. Community scientists can expand data
+collection efforts beyond what a single lab can accomplish and greatly
+enrich projects.
+
+A recent example focused on using social media posts to determine the
+distribution of ornate spotted rays (*Aetomylaeus vespertilio*)
+[@araujo2020].
+
+[![Photo of a rarely seen Ornate eagle ray (Aetomylaeus vespertilio),
+taken at Landaa Giraavaru, Baa Atoll, Maldives (February 2018).
+SunnyMart, CC BY-SA 4.0
+\<https://creativecommons.org/licenses/by-sa/4.0\>, via Wikimedia
+Commons](Ornate_eagle_ray_(Aetomylaeus_vespertilio)_Baa_Atoll,_Maldives_(2018).jpg)](https://commons.wikimedia.org/wiki/File:Ornate_eagle_ray_(Aetomylaeus_vespertilio)_Baa_Atoll,_Maldives_(2018).jpg)
+
+## 1
+
+Previous research indicated eagle rays are nocturnal feeders, with 80%
+of their feeding activity occurring at night. The collected images
+included 76 shots of rays feeding, with 50 of those shot in daylight
+hours. Does this match expectations?
+
+Make sure you include (6 points)
+
+-   null hypothesis (1 point)
+-   alternative hypothesis (1 point)
+-   explanation for test you will use (1.5 point)
+-   results from statistical test (1 point)
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+
+## 2
+
+Scientists used imaging tools to gather extra information from the the
+images. Note different images provided different pieces of data due to
+the perspective. For example, they were able to use some pictures to
+determine both sex (male, female, unknown) and wing width for each
+individual. Data is available at
+
+```{r}
+set.seed(29)
+ray_data <- data.frame(
+  sex = c(rep("male", 42), 
+           rep("female", 28), 
+           rep("unknown", 63)), 
+  width_cm = c(round(rnorm(42, 165, 5), 2), 
+               round(rnorm(28,218, 5),2), 
+               round(rnorm(63,47,5),2)))
+write.csv(ray_data, "ray_data.csv", row.names = F)
+rm(ray_data)
+```
+
+```{r}
+ray_data <- read.csv("ray_data.csv", stringsAsFactors = T)
+```
+
+Use the data to determine if wing width differs among sexes. Make sure
+you include (6 points)
+
+-   null hypothesis (1 point)
+
+-   alternative hypothesis (1 point)
+
+-   explanation for test you will use (1.5 point)
+
+-   results from statistical test (1 point)
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+
+## 3
+
+Plot the data from question 2.
+
+
+## 4
+
+The dataset also gave a chance to consider how social the rays are.
+Scientists considered images of each sex to determine if they were
+photographed alone or in groups.
+
+|                | Male | Female | Unknown |
+|----------------|------|--------|---------|
+| **Alone**      | 38   | 6      | 14      |
+| **In a group** | 4    | 22     | 49      |
+
+Use the data to determine if sociality differs among sexes. Make sure
+you include (6 points)
+
+-   null hypothesis (1 point)
+
+-   alternative hypothesis (1 point)
+
+-   explanation for test you will use (1.5 point)
+
+-   results from statistical test (1 point)
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+
+
+## 5
+
+Ornate eagle rays have very long tails - they can be up to 2-3 m long. A
+few images were found that allowed both the tail and the wing width to
+be measured. Is there any relationship among these body parts? Data is
+available at
+
+```{r}
+set.seed(29)
+wing_tail_data <- data.frame(
+    wing_width_cm = c(round(rnorm(52, 175, 25),2)))
+wing_tail_data$tail_length_cm <- wing_tail_data$wing_width_cm*2.4+runif(52)*10
+write.csv(wing_tail_data, "wing_tail_data.csv", row.names = F)
+rm(wing_tail_data)
+```
+
+```{r}
+wing_tail_data <- read.csv("wing_tail_data.csv", stringsAsFactors = T)
+```
+
+Make sure you include (6 points)
+
+-   null hypothesis (1 point)
+
+-   alternative hypothesis (1 point)
+
+-   explanation for test you will use (1.5 point)
+
+-   results from statistical test (1 point)
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+
+
+## 6
+
+In general, do you see any issues with using this data or the analysis
+you completed? Please note at least potential concerns or issues with
+any of the above datasets or analysis.

@@ -1,0 +1,197 @@
+---
+title: "2026 Summer  BIO 2100 Midterm Creation and Answers"
+subtitle: "33 points"
+bibliography: ref_2026_2100_summer_midterm.bib
+format:
+  html:
+    embed-resources: true
+    toc: true
+    toc-float: true
+    toc-depth: 6
+    code-fold: false
+editor:
+  visual:
+    wrap: 72
+  source:
+    wrap: 72
+---
+
+## Instructions! Read this first.
+
+The exam is open note, open course website, open class-related code
+repositories (mine and those you produced in class). However, you may
+not get external help ( from other students, AI, directed internet
+searches, etc.). Please update the statement below to acknowledge these
+instructions (and that you can use git).
+
+I, INSERT YOUR NAME HERE, promise to not seek external help on the exam.
+I understand any academic issues will result in a D or F on the exam or
+in the class and be reported to the Dean of Students. Infractions will
+also result in me being unable to obtain a letter of recommendation from
+the department for professional school applications.
+
+The exam should be committed and pushed to github by Thursday,
+6/25/2026, at 10:15 AM. You can also commit and push along the way, but
+please mark your final commit (when you are finished) with the comment
+**Finished - ready to grade!.**
+
+For all questions, the statement is based on what you might hear from a
+colleague (e.g., "How do I analyze this?"). This is like when you get a
+call to review a paper. Please answer questions succinctly but with
+necessary details on all required steps/concerns you might need to
+consider.
+
+While the exam is based on a realistic scenario (with citations), some
+data and scenarios are fictional and contrived for the exam (i.e., don't
+quote all this as fact!).
+
+Good luck!
+
+## Background
+
+"The use of cryptic coloration for visual camouflage (eg background
+matching) is widespread in the animal kingdom, occurring when the
+coloration and patterning of an organism resembles the surrounding
+substrate" [@messas2025]. Multiple traits, such as coloration, the
+ability to perceive, compare, and choose habitat based on color, and the
+ability to change color (within or across life stages), may all
+contribute to background matching and be under selective pressure.
+
+These issues were considered in a series of studies focused on the
+garden cross spider (*Araneus diadematus*). This species can range from
+light yellow to dark grey in general coloration. They may engage in
+crypsis to avoid predators or to allow them to ambush their prey. These
+spiders build orb webs, then retreat and hide to wait and ambush
+captured prey.
+
+[![Figure 1 from Messas et al 2025. Camouflage and color variation of
+the European garden spider Araneus diadematus. A) The resting position
+of a spider upon a leaf, evidencing a better match to brown than green
+backgrounds. B-C) Examples of how the coloration of spiders and their
+respective host leaves vary from dark to pale brown. Photo credits: Yuri
+Fanchini
+Messas.](Picture1.jpg){fig-alt="Picture of spiders camouflaged on leaves."}](https://academic.oup.com/view-large/figure/524067907/araf057_fig1.jpg)
+
+## 1
+
+Spiders (n=30) were presented with a choice experiment where half the
+space was covered with green paper and half with brown paper. Each side
+also contained a leaf of corresponding color. Spiders were released in
+the center of the space and position was recorded after 24 hours.
+
+24 spiders chose to build their web on the green side.
+
+How would you use statistics to analyze the data. Make sure you include
+
+-   null hypothesis (1 point)
+
+-   alternative hypothesis (1 point)
+
+-   explanation for test you will use (1.5 point)
+
+-   results from statistical test (1 point)
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+
+## 2
+
+A colleague thinks your analysis is wrong. They instead want to focus on
+the number choosing the brown side because that is what was observed
+most commonly in the field, even though brown leaves are rare. Do you
+need to re-do the analysis? Why or why not? Explain.
+
+## 3
+
+In the same experiment, 14 spiders chose to hide under the green leaf.
+
+How would you use statistics to analyze the data. Make sure you include
+
+-   null hypothesis (1 point)
+
+-   alternative hypothesis (1 point)
+
+-   explanation for test you will use (1.5 point)
+
+-   results from statistical test (1 point)
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+
+## 4
+
+Scientists also considered the ability of spiders to change their color
+to match their leaves.
+
+Had to read in original data and make a change column for ease
+
+```{r}
+color_change <- read.csv("colour_change_rnl_data.csv", stringsAsFactors = T)
+
+```
+
+```{r}
+library(reshape2)
+color_change_wide <- dcast(color_change, spider_id + substrate~day)
+```
+
+```{r}
+color_change_wide$change <- color_change_wide$`14`-color_change_wide$`0`
+```
+
+only use brown leaves here
+
+```{r}
+color_change_brown <- color_change_wide[color_change_wide$substrate=="brown",
+                                        c("spider_id", "substrate", "change")]
+color_change_all <- color_change_wide[,
+                                        c("spider_id", "substrate", "change")]
+```
+
+```{r}
+write.csv(color_change_brown, "color_change_brown.csv", row.names = F)
+write.csv(color_change_all, "color_change_all.csv", row.names = F)
+```
+
+The dataset below contains information on color change (a unitless
+measure; **change** column) for spiders kept in brown habitats for 14
+days. Is there any evidence spiders can change colors?
+
+```{r}
+color_change_brown <- read.csv("color_change_brown.csv", stringsAsFactors = T)
+```
+
+Analyze the data. Make sure you include
+
+-   null hypothesis (1 point)
+
+-   alternative hypothesis (1 point)
+
+-   explanation for test you will use (1.5 point)
+
+-   results from statistical test (1 point)
+
+    ```{r}
+    t.test(color_change_brown$change)
+    ```
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+
+## 5
+
+A colleague is confused. They note the average color change was -1.38
+units and many of the spiders did change color. Why do you need to test
+for color change if those facts are true?
+
+## 6
+
+A larger study included color change in spiders kept on green and brown
+substrates (the **substrate** column. Data are at
+
+```{r}
+color_change_all <- read.csv("color_change_all.csv", stringsAsFactors = T)
+```
+
+Construct an appropriate plot to showcase how color change differed
+among substrates.

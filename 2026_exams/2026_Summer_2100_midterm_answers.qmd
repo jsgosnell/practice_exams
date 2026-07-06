@@ -1,0 +1,250 @@
+---
+title: "2026 Summer  BIO 2100 Midterm Creation and Answers"
+subtitle: "33 points"
+bibliography: ref_2026_2100_summer_midterm.bib
+format:
+  html:
+    embed-resources: true
+    toc: true
+    toc-float: true
+    toc-depth: 6
+    code-fold: false
+editor:
+  visual:
+    wrap: 72
+  source:
+    wrap: 72
+---
+
+## Instructions! Read this first.
+
+The exam is open note, open course website, open class-related code
+repositories (mine and those you produced in class). However, you may
+not get external help ( from other students, AI, directed internet
+searches, etc.). Please update the statement below to acknowledge these
+instructions (and that you can use git).
+
+I, INSERT YOUR NAME HERE, promise to not seek external help on the exam.
+I understand any academic issues will result in a D or F on the exam or
+in the class and be reported to the Dean of Students. Infractions will
+also result in me being unable to obtain a letter of recommendation from
+the department for professional school applications.
+
+The exam should be committed and pushed to github by Thursday,
+6/25/2026, at 10:15 AM. You can also commit and push along the way, but
+please mark your final commit (when you are finished) with the comment
+**Finished - ready to grade!.**
+
+For all questions, the statement is based on what you might hear from a
+colleague (e.g., "How do I analyze this?"). This is like when you get a
+call to review a paper. Please answer questions succinctly but with
+necessary details on all required steps/concerns you might need to
+consider.
+
+While the exam is based on a realistic scenario (with citations), some
+data and scenarios are fictional and contrived for the exam (i.e., don't
+quote all this as fact!).
+
+Good luck!
+
+## Background
+
+"The use of cryptic coloration for visual camouflage (eg background
+matching) is widespread in the animal kingdom, occurring when the
+coloration and patterning of an organism resembles the surrounding
+substrate" [@messas2025]. Multiple traits, such as coloration, the
+ability to perceive, compare, and choose habitat based on color, and the
+ability to change color (within or across life stages), may all
+contribute to background matching and be under selective pressure.
+
+These issues were considered in a series of studies focused on the
+garden cross spider (*Araneus diadematus*). This species can range from
+light yellow to dark grey in general coloration. They may engage in
+crypsis to avoid predators or to allow them to ambush their prey. These
+spiders build orb webs, then retreat and hide to wait and ambush
+captured prey.
+
+[![Figure 1 from Messas et al 2025. Camouflage and color variation of
+the European garden spider Araneus diadematus. A) The resting position
+of a spider upon a leaf, evidencing a better match to brown than green
+backgrounds. B-C) Examples of how the coloration of spiders and their
+respective host leaves vary from dark to pale brown. Photo credits: Yuri
+Fanchini
+Messas.](Picture1.jpg){fig-alt="Picture of spiders camouflaged on leaves."}](https://academic.oup.com/view-large/figure/524067907/araf057_fig1.jpg)
+
+## 1
+
+Spiders (n=30) were presented with a choice experiment where half the
+space was covered with green paper and half with brown paper. Each side
+also contained a leaf of corresponding color. Spiders were released in
+the center of the space and position was recorded after 24 hours.
+
+24 spiders chose to build their web on the green side.
+
+How would you use statistics to analyze the data. Make sure you include
+
+-   null hypothesis (1 point)
+  - H~0~: Spiders have no preference for color (i.e., p=.5)
+
+-   alternative hypothesis (1 point)
+  - H~A~: Spiders have a preference for color (i.e., p$\neq$.5)
+
+-   explanation for test you will use (1.5 point)
+  - I have two outcomes that I am comparing to a set proportion of success, so
+  I will use a binomal test.
+
+-   results from statistical test (1 point)
+
+```{r}
+binom.test(24,30)
+```
+
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+      - since p=.0014 (<.05), I reject my null hypothesis. There is 
+      evidence for preference of color.
+
+## 2
+
+A colleague thinks your analysis is wrong. They instead want to focus on
+the number choosing the brown side because that is what was observed
+most commonly in the field, even though brown leaves are rare. Do you
+need to re-do the analysis? Why or why not? Explain.
+
+These results are from a controlled experiment with a 50/50 split, so brown 
+leaves being rare in the field does not impact them.  Also, for binomial data
+I can choose either outcome as the success or failure - it won't impact the 
+results.
+
+## 3
+
+In the same experiment, 14 spiders chose to hide under the green leaf.
+
+How would you use statistics to analyze the data. Make sure you include
+
+-   null hypothesis (1 point)
+  - H~0~: Spiders have no preference for leaf color (i.e., p=.5)
+
+-   alternative hypothesis (1 point)
+  - H~A~: Spiders have a preference for leaf color (i.e., p$\neq$.5)
+
+
+-   explanation for test you will use (1.5 point)
+  - I have two outcomes that I am comparing to a set proportion of success, so
+  I will use a binomal test.
+
+-   results from statistical test (1 point)
+
+```{r}
+binom.test(14,30)
+```
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+      - since p=.855 (>.05), I fail to reject my null hypothesis. There is no 
+      evidence for preference of leaf color.
+    
+
+## 4
+
+Scientists also considered the ability of spiders to change their color
+to match their leaves. The dataset below contains information on color
+change (a unitless measure; **change** column) for spiders kept in brown
+habitats for 14 days. Is there any evidence spiders can change colors?
+
+```{r}
+color_change_brown <- read.csv("color_change_brown.csv", stringsAsFactors = T)
+```
+
+Analyze the data. Make sure you include
+
+-   null hypothesis (1 point)
+  - H~0~: There is no change in spider color ($\mu_{change}=0$)
+
+-   alternative hypothesis (1 point)
+  - H~A~: There is change in spider color ($\mu_{change}\neq0$)
+
+-   explanation for test you will use (1.5 point)
+  - I will use a t-test as I am comparing continuous data to a set value and I 
+  don't know the variance of the underlying population. Color should also be
+  a hidden average of multiple factors (genetics, diet, development, etc)
+
+-   results from statistical test (1 point)
+
+    ```{r}
+    t.test(color_change_brown$change)
+    ```
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+      - Given t~14~=-1.673 (p=0.12), I fail to reject the null hypothesis. There
+      is no evidence of color change.
+
+## 5
+
+A colleague is confused. They note the average color change was -1.38
+units and many of the spiders did change color. Why do you need to test
+for color change if those facts are true?
+
+Spiders may change color for a number of reasons. However, what we observed may
+be due to sampling error or measurement issues. There was no consistent evidence 
+of change.
+
+## 6
+
+A larger study included color change in spiders kept on green and brown
+substrates (the **substrate** column. Data are at
+
+```{r}
+color_change_all <- read.csv("color_change_all.csv", stringsAsFactors = T)
+```
+
+Construct an appropriate plot to showcase how color change differed
+among substrates.
+
+Many options here.
+
+```{r}
+library(ggplot2)
+ggplot(color_change_all, aes(x=substrate, y=change, fill=substrate))+
+  geom_boxplot(alpha=.4, outlier.shape=NA, width=.5)+
+  geom_jitter(aes(color=substrate), width = .08, size = 3, alpha=0.8)+
+  labs(
+    x="Substrate",
+    y= "Color change (unitless)",
+    title="Spider color change by substrate type"
+  ) + 
+  theme_minimal(base_size=13)+
+  theme(legend.position="none")
+```
+
+
+
+```{r}
+ggplot(color_change_all, aes(x=substrate, y=change, fill=substrate))+
+  geom_jitter(aes(color=substrate), width = .08, size = 3, alpha=0.8)+
+  labs(
+    x="Substrate",
+    y= "Color change (unitless)",
+    title="Spider color change by substrate type"
+  ) + 
+  theme_minimal(base_size=13)+
+  theme(legend.position="none")
+```
+
+```{r}
+library(Rmisc)
+color_change_summary <- summarySE(color_change_all, measurevar = "change", groupvars = "substrate", na.rm=T)
+ggplot(color_change_summary, aes(x=substrate, y=change, fill=substrate))+
+  geom_col()+
+  geom_errorbar(aes(ymin=change-ci, ymax=change+ci), size=1.5)
+```
+
+```{r}
+ggplot(color_change_summary, aes(x=substrate, y=change, fill=substrate))+
+  geom_point()+
+  geom_errorbar(aes(ymin=change-ci, ymax=change+ci), size=1.5)
+```
+
+

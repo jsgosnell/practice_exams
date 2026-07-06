@@ -1,0 +1,292 @@
+---
+title: "2026 Spring BIO 2100 Final Creation and Answers"
+subtitle: "33 points"
+bibliography: ref_2026_2100_spring_final.bib
+format:
+  html:
+    embed-resources: true
+    toc: true
+    toc-float: true
+    toc-depth: 6
+    code-fold: false
+editor:
+  visual:
+    wrap: 72
+  source:
+    wrap: 72
+---
+
+## Instructions! Read this first.
+
+The exam is open note, open course website, open class-related code
+repositories (mine and those you produced in class). However, you may
+not get external help ( from other students, AI, directed internet
+searches, etc.). Please update the statement below to acknowledge these
+instructions (and that you can use git).
+
+I, INSERT YOUR NAME HERE, promise to not seek external help on the exam.
+I understand any academic issues will result in a D or F on the exam or
+in the class and be reported to the Dean of Students. Infractions will
+also result in me being unable to obtain a letter of recommendation from
+the department for professional school applications.
+
+The exam should be committed and pushed to github by Monday, 5/18/2026,
+at 10:00 AM. You can also commit and push along the way, but please mark
+your final commit (when you are finished) with the comment **Finished -
+ready to grade!.**
+
+For all questions, the statement is based on what you might hear from a
+colleague (e.g., "How do I analyze this?"). This is like when you get a
+call to review a paper. Please answer questions succinctly but with
+necessary details on all required steps/concerns you might need to
+consider.
+
+While the exam is based on a realistic scenario (with citations), some
+data and scenarios are fictional and contrived for the exam (i.e., don't
+quote all this as fact!).
+
+Good luck!
+
+## Background
+
+Community science is a growing area where people who are not
+traditionally considered scientists assist with research projects. This
+can include providing data, assisting with project implementation, and
+analyzing data [@gosnell2023]. Community scientists can expand data
+collection efforts beyond what a single lab can accomplish and greatly
+enrich projects.
+
+A recent example focused on using social media posts to determine the
+distribution of ornate spotted rays (*Aetomylaeus vespertilio*)
+[@araujo2020].
+
+[![Photo of a rarely seen Ornate eagle ray (Aetomylaeus vespertilio),
+taken at Landaa Giraavaru, Baa Atoll, Maldives (February 2018).
+SunnyMart, CC BY-SA 4.0
+\<https://creativecommons.org/licenses/by-sa/4.0\>, via Wikimedia
+Commons](Ornate_eagle_ray_(Aetomylaeus_vespertilio)_Baa_Atoll,_Maldives_(2018).jpg)](https://commons.wikimedia.org/wiki/File:Ornate_eagle_ray_(Aetomylaeus_vespertilio)_Baa_Atoll,_Maldives_(2018).jpg)
+
+## 1
+
+Previous research indicated eagle rays are nocturnal feeders, with 80%
+of their feeding activity occurring at night. The collected images
+included 76 shots of rays feeding, with 50 of those shot in daylight
+hours. Does this match expectations?
+
+Make sure you include (6 points)
+
+-   null hypothesis (1 point)
+
+    -   The proportion of eagle ray feeding activity during daylight is
+        20%.
+
+-   alternative hypothesis (1 point)
+
+    -   The proportion of eagle ray feeding activity during daylight is
+        not 20%.
+
+-   explanation for test you will use (1.5 point)
+  - I have two outcomes that I am comparing to a set proportion of success, so
+  I will use a binomal test.
+
+-   results from statistical test (1 point)
+
+```{r}
+binom.test(50, 76, p = 0.20, alternative = "two.sided") 
+```
+
+or
+
+```{r}
+binom.test(76-50, 76, p = 0.80, alternative = "two.sided") 
+```
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+      - since p<.001(<.05), I reject my null hypothesis. There is 
+      evidence that the proportion of rays feeding during the day is not 20%.
+
+## 2
+
+Scientists used imaging tools to gather extra information from the the
+images. Note different images provided different pieces of data due to
+the perspective. For example, they were able to use some pictures to
+determine both sex (male, female, unknown) and wing width for each
+individual. Data is available at
+
+```{r}
+ray_data <- read.csv("ray_data.csv", stringsAsFactors = T)
+```
+
+Use the data to determine if wing width differs among sexes. Make sure
+you include (6 points)
+
+-   null hypothesis (1 point)
+  - H~0~: Wing width does not differ among sexes (i.e., $\mu_{male}=\mu_{female}=\mu_{unknown}$)
+
+-   alternative hypothesis (1 point)
+  - H~A~: Wing width does differ among sexes (i.e., at least one $\mu_\text{one measured group}\neq\mu_\text{other measured group}$)
+
+-   explanation for test you will use (1.5 point)
+
+  - I will use an ANOVA, a type of linear model, since I am comparing means
+  among groups
+
+-   results from statistical test (1 point)
+
+```{r}
+width_model <- lm(width_cm~sex, ray_data)
+plot(width_model)
+```
+Assumptions look ok, so I can check results.
+
+```{r}
+library(car)
+Anova(width_model, type="III")
+```
+There is a significant difference among groups (F~2,130~=11,685, p<.001), so I reject
+the null that all groups are the same.  To find which group is different, I can
+carry out post-hoc tests using the Tukey method to control for family-wise error
+rate.
+
+```{r}
+library(multcomp)
+summary(glht(width_model,linfct = mcp(sex = "Tukey")))
+
+```
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+    
+  The results indicate all groups have different average wing widths (all p<.001
+  for post hoc tests).
+
+## 3
+
+Plot the data from question 2.
+
+Several options here
+
+```{r}
+library(Rmisc)
+library(ggplot2)
+ray_summary <- summarySE(ray_data, measurevar="width_cm", groupvars="sex")
+ggplot(ray_summary, aes(x=sex, y=width_cm, color=sex)) +
+    geom_errorbar(aes(ymin=width_cm - ci, ymax=width_cm + ci), width=0) +
+    geom_point(size=3) +
+    ylab("Width (cm)") +
+    xlab("Sex") +
+    ggtitle("Width by sex")
+
+```
+
+```{r}
+ggplot(ray_data, aes(y=width_cm, x=sex, color=sex)) +
+  geom_jitter() +
+  labs(title="Width of rays by sex",
+       subtitle = "There is no apparent difference in width",
+       y= "Ray width (cm)",
+       x= "Sex")+
+  guides(color=F)
+```
+
+## 4
+
+The dataset also gave a chance to consider how social the rays are.
+Scientists considered images of each sex to determine if they were
+photographed alone or in groups.
+
+|                | Male | Female | Unknown |
+|----------------|------|--------|---------|
+| **Alone**      | 38   | 6      | 14      |
+| **In a group** | 4    | 22     | 49      |
+
+Use the data to determine if sociality differs among sexes. Make sure
+you include (6 points)
+
+-   null hypothesis (1 point)
+  - H~0~: Ray sociality does not differ by sex 
+-   alternative hypothesis (1 point)
+  - H~0~: Ray sociality does differ by sex 
+-   explanation for test you will use (1.5 point)
+-   results from statistical test (1 point)
+  - I will attempt to use a $\chi^2$ test to compare proportions among the groups.
+
+
+```{r}
+ray_ratio_table <- matrix(c(38, 6, 14, 4,22,49), 2,3, byrow = T)
+colnames(ray_ratio_table) <- c("male", "female", "unknown")
+rownames(ray_ratio_table) <- c("alone", "group")
+chisq.test(ray_ratio_table)
+```
+Test assumptions appear to be met (no warnings). The p-value is <. 05 ($\chi^2_2$=54.834, p<.001,
+so I reject the null hypothesis. I carry out post-hoc tests to see which groups are 
+different than others.I will use the Holm's methods to adjust for FWER.
+
+```{r}
+library(rcompanion)
+holm_correct <- pairwiseNominalIndependence(ray_ratio_table, compare="col", method = "holm")
+library(rmarkdown)
+paged_table(holm_correct[order(holm_correct$p.adj.Chisq), c("Comparison", "p.adj.Chisq")])
+
+```
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+    
+  - results indicate that males are diffent than the other groups (all p<.05).
+## 5
+
+Ornate eagle rays have very long tails - they can be up to 2-3 m long. A
+few images were found that allowed both the tail and the wing width to
+be measured. Is there any relationship among these body parts? Data is
+available at
+
+```{r}
+wing_tail_data <- read.csv("wing_tail_data.csv", stringsAsFactors = T)
+```
+
+Make sure you include (6 points)
+
+-   null hypothesis (1 point)
+  - H~0~: There is no relationship between tail length and wing width ($\beta=0$)
+
+-   alternative hypothesis (1 point)
+  - H~0~: There is no relationship between tail length and wing width ($\beta\neq0$)
+
+
+-   explanation for test you will use (1.5 point)
+  - I will use linear regression to compare the relationship between two
+  continuous variables.  I could also use/call this correlation and investigate
+ correlation if I preferred.
+
+-   results from statistical test (1 point)
+
+```{r}
+plot(lm(tail_length_cm~wing_width_cm, wing_tail_data))
+```
+Assumptions appear to be met.
+
+```{r}
+summary(lm(tail_length_cm~wing_width_cm, wing_tail_data))
+```
+
+or 
+
+```{r}
+cor.test(~tail_length_cm+wing_width_cm, wing_tail_data)
+```
+
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+
+  - Results indicate that there is a significant positive correlation between
+  tail length and wing width (F~1,50~=20770, p<.005).I reject the null hypothesis.
+  
+## 6
+
+In general, do you see any issues with using this data or the analysis
+you completed? Please note at least potential concerns or issues with
+any of the above datasets or analysis.
+
+Issues include these being from uncontrolled photos, so maybe more at day than night,
+in touristy areas, or of extreme (large,small, colorful) rays.
