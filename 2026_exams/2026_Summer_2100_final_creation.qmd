@@ -1,0 +1,316 @@
+---
+title: "2026 Summer BIO 2100 Final Creation"
+subtitle: "33 points"
+bibliography: ref_2026_2100_summer_final.bib
+format:
+  html:
+    embed-resources: true
+    toc: true
+    toc-float: true
+    toc-depth: 6
+    code-fold: false
+editor:
+  visual:
+    wrap: 72
+  source:
+    wrap: 72
+---
+
+## Instructions! Read this first.
+
+The exam is open note, open course website, open class-related code
+repositories (mine and those you produced in class). However, you may
+not get external help ( from other students, AI, directed internet
+searches, etc.). Please update the statement below to acknowledge these
+instructions (and that you can use git).
+
+I, INSERT YOUR NAME HERE, promise to not seek external help on the exam.
+I understand any academic issues will result in a D or F on the exam or
+in the class and be reported to the Dean of Students. Infractions will
+also result in me being unable to obtain a letter of recommendation from
+the department for professional school applications.
+
+The exam should be committed and pushed to github by Thursday,
+7/9/2026, at 10:15 AM. You can also commit and push along the way, but
+please mark your final commit (when you are finished) with the comment
+**Finished - ready to grade!.**
+
+For all questions, the statement is based on what you might hear from a
+colleague (e.g., "How do I analyze this?"). This is like when you get a
+call to review a paper. Please answer questions succinctly but with
+necessary details on all required steps/concerns you might need to
+consider.
+
+While the exam is based on a realistic scenario (with citations), some
+data and scenarios are fictional and contrived for the exam (i.e., don't
+quote all this as fact!).
+
+Good luck!
+
+## Background
+
+Many organisms live in close proximity (on or in) to other organisms.
+These *symbionts* may have important impacts on their *hosts*, with
+examples ranging from parasites to mutualists. These impacts may include
+may include resource extraction, leading to reduced energy for hosts,
+but also may include changes in host behavior. Importantly, potential
+hosts may recognize the threat of parasitism and alter their behavior to
+minimize this interaction.
+
+@reyes2026 explored this question in exposing burying beetles
+(*Nicrophorus nepalensis*) and their symbiotic mites (*Poechilochirus
+carabi*. These mites attach to beetles to "follow" them to the carcasses
+they consume(this is called *phoresy*). This is considered a *commensal*
+interaction, meaning the beetles are not harmed but the mites gain a
+benefit. However, once they arrive at a carcass, mite presence may
+benefit the beetles by consuming competing species like blowfies, but
+they also may reduce beetle population growth by consuming beetle eggs
+and larvae. Other unknown impacts may also exist. Given this, the
+scientists wanted to know if the presence of mites during movement
+towards a carcass (the phoretic interaction) changed beetle behavior. To
+"disentangle" this, beetles were exposed to
+
+-   no mites (c: control)
+-   mites only prior to introduction to a carcass (mites were then
+    removed) (r: removed)
+-   mites prior to introduction to a carcass and during time in carcass
+    (mites were not removed) (m: mites)
+
+Various outcomes were then considered. You are asked to help analyze the data.
+
+[![Experimental design and timeline (Fig 1 from Reyes et
+al)](gr1_lrg.jpg)](https://www.cell.com/iscience/fulltext/S2589-0042(26)01957-7)
+
+## Design
+
+Pulling in data and making columns (following published R script).
+
+```{r}
+data<-read.csv("mite_exp_data_combined.csv",header=T)
+data$avg_larva_mass<-data$tot.weight/data$larvae
+data$larval_density <- data$larvae/data$carc.wt
+```
+
+```{r}
+library(tidyverse)
+datanew <- data %>%
+  mutate(across(c(carc.wt,avg_larva_mass, tot.weight, larvae, Mass_change_1, Mass_change_2, lifespan), as.numeric))
+datanew <- subset(datanew, larvae != 0 & !is.na(larvae))
+datanew$bl<-as.factor(datanew$bl)
+datanew$pair<-as.factor(datanew$pair)
+datanew$tr <- factor(datanew$tr, 
+                       levels = c("c", "r", "m"))
+str(datanew)
+summary(datanew)
+```
+
+What they analyzed:
+
+-   \# of larvae (reproductive success)
+
+    -   model=glmer(larvae\~tr+carc.wt+clutch.size+(1\|bl/pair),poisson,data=data)
+
+-   brood size v mite number in m group
+
+    -   datam=data\[data\$tr=="m",\] ; only for mite treatment
+
+    -   model=glmer(larvae\~carc.wt+mite.number+(1\|bl),poisson,data=datam)
+        model=glmer(mite.number\~carc.wt+larvae+(1\|bl),poisson,data=datam)
+
+    -   model=glmer(tot.weight\~carc.wt+mite.number+(1\|bl),gaussian,data=datam)
+
+        -   tot.weight is total brood mass
+
+    -   model=glmer(tot.weight\~tr+carc.wt+(1\|bl/pair),gaussian,data=data\[data\$larvae!="0",\])
+
+-   avg larval mass
+
+    -   model=glmer(avg_larva_mass\~tr\*larvae+carc.wt+(1\|bl/pair),gaussian,data=data)
+
+    -   model=glmer(Mass_change_1\~tr\*clutch.size+carc.wt+(1\|bl/pair),gaussian,data=data)
+
+    -   model=glmer(Mass_change_2\~tr\*larvae+carc.wt+(1\|bl/pair),gaussian,data=data)
+
+-   mite \# relationship
+
+    -   datam=data\[data\$tr=="m",\]
+
+    -   model1 \<- glmer(larvae \~
+        mite.number+clutch.size+carc.wt+(1\|bl), poisson, data = datam)
+
+    -   model2 \<- glmer(avg_larva_mass \~
+        mite.number+larvae+carc.wt+(1\|bl), gaussian, data = datam)
+
+Let's do questions focused on:
+
+-   average larval mass under each condition
+
+    -   ignore blocks, ids, etc
+
+```{r}
+    datanew$treatment <- datanew$tr
+    datanew$number_of_larvae <- datanew$larvae
+    datanew$average_larval_mass_g <- datanew$avg_larva_mass
+    datanew$mite_number <- datanew$mite.number
+    write.csv(datanew[,names(datanew) %in% c("treatment", "number_of_larvae","average_larval_mass_g")], "experimental_data.csv", row.names = F)
+    write.csv(datanew[,names(datanew)%in% c("treatment", "number_of_larvae", "lifespan")], "lifespan_info.csv", row.names = F)
+     write.csv(datanew[datanew$treatment == "m", names(datanew) %in% c("mite_number", "number_of_larvae")], "mite_number_info.csv", row.names = F)   
+```
+
+-   brood size vs mite number in m group
+
+-   relationship between avg larval mass and number of larvae
+
+-   impact of brood size on lifespan
+
+    -   ancova wiht treatment
+
+-   probability of success
+
+    -   Across all three treatment groups, the majority of females
+        produced eggs, with rates ranging from 68.4% to 73.0% (control:
+        54/74, 73.0%; mite-cue: 52/73, 71.2%; with-mite: 54/79, 68.4%).
+        There was no significant difference in the probability of egg
+        production across the treatments (Chi-square test: X2 = 0.40,
+        d.f. = 2, *p* = 0.817). However, the probability of breeding
+        success varied across the treatments (control: 32/74, 43.2%;
+        mite-cue: 34/73, 46.6%; with-mite: 43/79, 54.4%; Pearson’s
+        Chi-squared test: X2 = 7.58, d.f. = 2, *p* = 0.023).
+
+## 1
+
+Compiled data showed the following information on egg production.
+
+|                 |               |     |     |
+|-----------------|---------------|-----|-----|
+|                 | **Treatment** |     |     |
+| Outcome         | *c*           | *r* | *m* |
+| *Eggs laid*     | 54            | 52  | 54  |
+| *Eggs not laid* | 20            | 19  | 25  |
+
+: Egg production across treatments
+
+How would you use statistics to determine if the manipulations impacted
+egg production? Make sure you include
+
+-   null hypothesis (1 point)
+
+-   alternative hypothesis (1 point)
+
+-   explanation for test you will use (1.5 point)
+
+-   results from statistical test (1 point)
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+
+## 2
+
+All eggs that were produced did not lead to surviving larvae (baby
+beetles). Compiled data is shown below.
+
+|                      |               |     |     |
+|----------------------|---------------|-----|-----|
+|                      | **Treatment** |     |     |
+| Outcome              | *c*           | *r* | *m* |
+| *Eggs hatched*       | 32            | 34  | 43  |
+| *Eggs did not hatch* | 42            | 39  | 36  |
+
+: Egg success among treatments
+
+How would you use statistics to determine if the manipulations impacted
+egg success? Make sure you include
+
+-   null hypothesis (1 point)
+
+-   alternative hypothesis (1 point)
+
+-   explanation for test you will use (1.5 point)
+
+-   results from statistical test (1 point)
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+
+## 3
+
+Larvae were weighed. Average larval mass(g) is found in the file
+
+```{r}
+experiment_data <- read.csv("experimental_data.csv", stringsAsFactors = T)
+```
+
+where 
+
+* treatment is
+  * c for control
+  * r for removed
+  * m for mites
+  
+How would you analyze this data?  Make sure you include
+
+-   null hypothesis (1 point)
+
+-   alternative hypothesis (1 point)
+
+-   explanation for test you will use (1.5 point)
+
+-   results from statistical test (1 point)
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+
+## 4
+
+Maternal life span was also considered. Data can be found at
+
+```{r}
+lifespan_data <- read.csv("lifespan_info.csv", stringsAsFactors = T)
+```
+
+How would you analyze this data?  Make sure you include
+
+-   null hypothesis (1 point)
+
+-   alternative hypothesis (1 point)
+
+-   explanation for test you will use (1.5 point)
+
+-   results from statistical test (1 point)
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+
+## 5
+
+For the m(ite) treatments, the  number of mites was also recorded. 
+
+```{r}
+mite_data <- read.csv("mite_number_info.csv", stringsAsFactors = T)
+```
+
+Is there evidence mite number impacts larval number? Make sure you include
+
+-   null hypothesis (1 point)
+
+-   alternative hypothesis (1 point)
+
+-   explanation for test you will use (1.5 point)
+
+-   results from statistical test (1 point)
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+
+
+## 6
+
+Using any of the provided datasets, produce a relevant plot. Describe the 
+goal of the plot here(what is it meant to show?) and then add the code (8 points).
+
+## 7
+
+Can you think of any issues or questions related to the study you would like
+to ask before publishing your findings?
+
+
