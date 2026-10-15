@@ -1,7 +1,7 @@
 ---
 title: "2026 Summer BIO 2100 Final Creation"
-subtitle: "33 points"
-bibliography: ref_2026_2100_summer_final.bib
+subtitle: "41 points"
+bibliography: ref_2026_2100_summer_midterm.bib
 format:
   html:
     embed-resources: true

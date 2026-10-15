@@ -1,0 +1,220 @@
+---
+title: "2026 Summer BIO 2100 Final"
+subtitle: "41 points"
+bibliography: ref_2026_2100_summer_midterm.bib
+format:
+  html:
+    embed-resources: true
+    toc: true
+    toc-float: true
+    toc-depth: 6
+    code-fold: false
+editor:
+  visual:
+    wrap: 72
+  source:
+    wrap: 72
+---
+
+## Instructions! Read this first.
+
+The exam is open note, open course website, open class-related code
+repositories (mine and those you produced in class). However, you may
+not get external help ( from other students, AI, directed internet
+searches, etc.). Please update the statement below to acknowledge these
+instructions (and that you can use git).
+
+I, INSERT YOUR NAME HERE, promise to not seek external help on the exam.
+I understand any academic issues will result in a D or F on the exam or
+in the class and be reported to the Dean of Students. Infractions will
+also result in me being unable to obtain a letter of recommendation from
+the department for professional school applications.
+
+The exam should be committed and pushed to github by Thursday, 7/9/2026,
+at 10:15 AM. You can also commit and push along the way, but please mark
+your final commit (when you are finished) with the comment **Finished -
+ready to grade!.**
+
+For all questions, the statement is based on what you might hear from a
+colleague (e.g., "How do I analyze this?"). This is like when you get a
+call to review a paper. Please answer questions succinctly but with
+necessary details on all required steps/concerns you might need to
+consider.
+
+While the exam is based on a realistic scenario (with citations), some
+data and scenarios are fictional and contrived for the exam (i.e., don't
+quote all this as fact!).
+
+Good luck!
+
+## Background
+
+Many organisms live in close proximity (on or in) to other organisms.
+These *symbionts* may have important impacts on their *hosts*, with
+examples ranging from parasites to mutualists. These impacts may include
+may include resource extraction, leading to reduced energy for hosts,
+but also may include changes in host behavior. Importantly, potential
+hosts may recognize the threat of parasitism and alter their behavior to
+minimize this interaction.
+
+@reyes2026 explored this question in exposing burying beetles
+(*Nicrophorus nepalensis*) and their symbiotic mites (*Poechilochirus
+carabi*). These mites attach to beetles to "follow" them to the carcasses
+they consume(this is called *phoresy*). This is considered a *commensal*
+interaction, meaning the beetles are not harmed but the mites gain a
+benefit. However, once they arrive at a carcass, mite presence may
+benefit the beetles by consuming competing species like blowfies, but
+they also may reduce beetle population growth by consuming beetle eggs
+and larvae. Other unknown impacts may also exist. Given this, the
+scientists wanted to know if the presence of mites during movement
+towards a carcass (the phoretic interaction) changed beetle behavior. To
+"disentangle" this, beetles were exposed to
+
+-   no mites (c: control)
+-   mites only prior to introduction to a carcass (mites were then
+    removed) (r: removed)
+-   mites prior to introduction to a carcass and during time in carcass
+    (mites were not removed) (m: mites)
+
+Various outcomes were then considered. You are asked to help analyze the
+data.
+
+[![Experimental design and timeline (Fig 1 from Reyes et
+al)](gr1_lrg.jpg)](https://www.cell.com/iscience/fulltext/S2589-0042(26)01957-7)
+
+## 1
+
+Compiled data showed the following information on egg production.
+
+|                 |               |     |     |
+|-----------------|---------------|-----|-----|
+|                 | **Treatment** |     |     |
+| Outcome         | *c*           | *r* | *m* |
+| *Eggs laid*     | 54            | 52  | 54  |
+| *Eggs not laid* | 20            | 21  | 25  |
+
+: Egg production across treatments
+
+How would you use statistics to determine if the manipulations impacted
+egg production? Make sure you include
+
+-   null hypothesis (1 point)
+
+-   alternative hypothesis (1 point)
+
+-   explanation for test you will use (1.5 point)
+
+-   results from statistical test (1 point)
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+
+## 2
+
+All eggs that were produced did not lead to surviving larvae (baby
+beetles). Compiled data is shown below.
+
+|                          |               |     |     |
+|--------------------------|---------------|-----|-----|
+|                          | **Treatment** |     |     |
+| Outcome                  | *c*           | *r* | *m* |
+| *larvae survived*        | 32            | 34  | 52  |
+| *larvae did not survive* | 41            | 39  | 22  |
+
+: Egg success among treatments
+
+How would you use statistics to determine if the manipulations impacted
+egg success? Make sure you include
+
+-   null hypothesis (1 point)
+
+-   alternative hypothesis (1 point)
+
+-   explanation for test you will use (1.5 point)
+
+-   results from statistical test (1 point)
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+
+## 3
+
+Larvae were weighed. Average larval mass(g) is found in the file
+
+```{r}
+experiment_data <- read.csv("experimental_data.csv", stringsAsFactors = T)
+```
+
+where
+
+-   treatment is
+    -   c for control
+    -   r for removed
+    -   m for mites
+
+How would you analyze this data? Make sure you include
+
+-   null hypothesis (1 point)
+
+-   alternative hypothesis (1 point)
+
+-   explanation for test you will use (1.5 point)
+
+-   results from statistical test (1 point)
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+
+## 4
+
+Maternal life span was also considered. Data can be found at
+
+```{r}
+lifespan_data <- read.csv("lifespan_info.csv", stringsAsFactors = T)
+```
+
+How would you analyze this data? Make sure you include
+
+-   null hypothesis (1 point)
+
+-   alternative hypothesis (1 point)
+
+-   explanation for test you will use (1.5 point)
+
+-   results from statistical test (1 point)
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+
+## 5
+
+For the m(ite) treatments, the number of mites was also recorded.
+
+```{r}
+mite_data <- read.csv("mite_number_info.csv", stringsAsFactors = T)
+```
+
+Is there evidence mite number impacts larval number? Make sure you
+include
+
+-   null hypothesis (1 point)
+
+-   alternative hypothesis (1 point)
+
+-   explanation for test you will use (1.5 point)
+
+-   results from statistical test (1 point)
+
+-   clear explanation of how results relate to your stated hypotheses
+    (1.5 point)
+
+## 6
+
+Using any of the provided datasets, produce a relevant plot. Describe
+the goal of the plot here(what is it meant to show?) and then add the
+code (8 points).
+
+## 7
+
+Can you think of any issues or questions related to the study you would
+like to ask before publishing your findings (3 points)?
