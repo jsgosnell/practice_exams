@@ -1,7 +1,7 @@
 ---
 title: "2026 Spring BIO 2100 Final"
 subtitle: "35 points"
-bibliography: ref_2026_2100_summer_final.bib
+bibliography: ref_2026_2100_spring_final.bib
 format:
   html:
     embed-resources: true
